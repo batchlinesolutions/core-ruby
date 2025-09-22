@@ -2,9 +2,11 @@
 
 module IntelligentFoods
   module Authorization
-    class Bearer < Base
-      def header
-        "Bearer #{token}"
+    class Base
+      attr_reader :token
+
+      def initialize(token: nil)
+        @token = token
       end
     end
   end

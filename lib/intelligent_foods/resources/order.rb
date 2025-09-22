@@ -24,26 +24,26 @@ module IntelligentFoods
       order
     end
 
+    def object_name
+      "order"
+    end
+
     def create!
-      path = "#{IntelligentFoods.base_url}/order"
-      response = client.post(path: path, body: request_body)
+      response = client.post(path: resources_path, body: request_body)
       if response.success?
         Order::build_from_response(response.data)
       else
-        mark_as_invalid
-        raise OrderNotCreatedError.build(response)
+        handle_order_not_created(response)
       end
     end
 
     def cancel!
-      path = "#{IntelligentFoods.base_url}/order/#{id}"
-      response = client.delete(path: path)
+      response = client.delete(path: resource_path)
       if response.success?
         mark_as_cancelled
         self
       else
-        mark_as_invalid
-        raise OrderNotCancelledError.build(response)
+        handle_order_not_cancelled(response)
       end
     end
 
@@ -73,6 +73,16 @@ module IntelligentFoods
     end
 
     protected
+
+    def handle_order_not_created(response)
+      mark_as_invalid
+      raise OrderNotCreatedError.build(response)
+    end
+
+    def handle_order_not_cancelled(response)
+      mark_as_invalid
+      raise OrderNotCancelledError.build(response)
+    end
 
     def mark_as_cancelled
       self[:status] = CANCELLED

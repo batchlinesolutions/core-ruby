@@ -1,61 +1,23 @@
 # frozen_string_literal: true
 
 RSpec.describe IntelligentFoods::ApiClient do
-  describe "#authenticate!" do
-    it "sets the access token" do
-      client = IntelligentFoods::ApiClient.new(id: "id", secret: "secret")
-      access_token = "accesstoken"
-      stub_authentication access_token: access_token
+  describe ".build" do
+    it "sets the api" do
+      api = IntelligentFoods::V1.new
 
-      client.authenticate!
+      result = IntelligentFoods::ApiClient.build(api)
 
-      expect(client.access_token).to eq(access_token)
+      expect(result.api).to eq(api)
     end
 
-    it "sets the authorization basic header" do
-      stub_authentication
-      request = build_stubbed_post
-      client = IntelligentFoods::ApiClient.new(id: "id", secret: "secret")
-      header = "Basic #{build_encoded_token(id: "id", secret: "secret")}"
+    it "sets the authentication" do
+      api = IntelligentFoods::V1.new
+      auth = IntelligentFoods::Authorization::Bearer.new(token: "1234")
+      allow(api).to receive(:authentication).and_return(auth)
 
-      client.authenticate!
+      result = IntelligentFoods::ApiClient.build(api)
 
-      expect(request["Authorization"]).to eq(header)
-    end
-
-    it "includes the client id and client secret in the body" do
-      stub_authentication
-      request = build_stubbed_post
-      client = IntelligentFoods::ApiClient.new(id: "id", secret: "secret")
-      body = { client_id: "id", client_secret: "secret" }
-
-      client.authenticate!
-
-      expect(request.body).to eq(body.to_json)
-    end
-
-    it "sets the content type header" do
-      stub_authentication
-      request = build_stubbed_post
-      client = IntelligentFoods::ApiClient.new(id: "id", secret: "secret")
-      content_type = "application/json"
-
-      client.authenticate!
-
-      expect(request["content-type"]).to eq(content_type)
-    end
-
-    context "there is an error with the request" do
-      it "raises an error" do
-        response_body = { error: "Could not perform request" }
-        response = error_response(body: response_body)
-        stub_api_response response: response
-        client = IntelligentFoods::ApiClient.new(id: "id", secret: "secret")
-
-        expect {
-          client.authenticate!
-        }.to raise_error("Could not perform request")
-      end
+      expect(result.authentication).to eq(auth)
     end
   end
 
@@ -63,8 +25,10 @@ RSpec.describe IntelligentFoods::ApiClient do
     it "sets the authorization bearer header" do
       stub_api_response
       request = build_stubbed_post
-      client = IntelligentFoods::ApiClient.new
+      api = IntelligentFoods::V1.new
       auth = IntelligentFoods::Authorization::Bearer.new(token: "1234")
+      client = IntelligentFoods::ApiClient.new(api: api,
+                                               authentication: auth)
       allow(IntelligentFoods::Authorization::Bearer).to receive(:new).
         and_return(auth)
       header = "Bearer 1234"
@@ -79,7 +43,7 @@ RSpec.describe IntelligentFoods::ApiClient do
       http_client = double
       allow(http_client).to receive(:request)
       stub_api_response http: http_client
-      client = IntelligentFoods::ApiClient.new(id: "id", secret: "secret")
+      client = IntelligentFoods::ApiClient.new
 
       client.execute_request(request: request, uri: request.uri)
 
@@ -91,7 +55,7 @@ RSpec.describe IntelligentFoods::ApiClient do
       http_client = double
       response = OpenStruct.new(code: 200)
       stub_api_response response: response, http: http_client
-      client = IntelligentFoods::ApiClient.new(id: "id", secret: "secret")
+      client = IntelligentFoods::ApiClient.new
       allow(JSON).to receive(:parse)
 
       client.execute_request(request: request, uri: request.uri)
@@ -105,7 +69,7 @@ RSpec.describe IntelligentFoods::ApiClient do
         http_client = double
         response = OpenStruct.new(code: 204)
         stub_api_response response: response, http: http_client
-        client = IntelligentFoods::ApiClient.new(id: "id", secret: "secret")
+        client = IntelligentFoods::ApiClient.new
         allow(JSON).to receive(:parse)
 
         client.execute_request(request: request, uri: request.uri)
@@ -120,7 +84,7 @@ RSpec.describe IntelligentFoods::ApiClient do
         http_client = double
         response = OpenStruct.new(code: 301)
         stub_api_response response: response, http: http_client
-        client = IntelligentFoods::ApiClient.new(id: "id", secret: "secret")
+        client = IntelligentFoods::ApiClient.new
         allow(JSON).to receive(:parse)
 
         client.execute_request(request: request, uri: request.uri)
@@ -135,44 +99,29 @@ RSpec.describe IntelligentFoods::ApiClient do
         http_client = double
         response = OpenStruct.new(code: 401)
         stub_api_response response: response, http: http_client
-        client = IntelligentFoods::ApiClient.new(id: "id", secret: "secret")
+        api = IntelligentFoods::V1.new
+        client = IntelligentFoods::ApiClient.new(api: api)
 
         expect {
           client.execute_request(request: request, uri: request.uri)
         }.to raise_error(IntelligentFoods::AuthenticationError)
       end
 
-      it "is not authenticated" do
+      it "resets the apis authentication" do
         request = build_stubbed_post
         http_client = double
         response = OpenStruct.new(code: 401)
         stub_api_response response: response, http: http_client
-        client = IntelligentFoods::ApiClient.new(id: "id", secret: "secret")
+        api = IntelligentFoods::V1.new
+        client = IntelligentFoods::ApiClient.new(api: api)
+        allow(api).to receive(:reset_authentication)
 
         begin
           client.execute_request(request: request, uri: request.uri)
         rescue IntelligentFoods::AuthenticationError
-          expect(client).not_to be_authenticated
         end
-      end
-    end
 
-    describe "#authenticated?" do
-      it "is not authenticated" do
-        client = IntelligentFoods::ApiClient.new(id: "id", secret: "secret")
-
-        expect(client).not_to be_authenticated
-      end
-
-      context "the client has been authenticated" do
-        it "is authenticated" do
-          stub_authentication
-          client = IntelligentFoods::ApiClient.new(id: "id", secret: "secret")
-
-          client.authenticate!
-
-          expect(client).to be_authenticated
-        end
+        expect(api).to have_received(:reset_authentication)
       end
     end
   end
@@ -212,6 +161,21 @@ RSpec.describe IntelligentFoods::ApiClient do
 
       expect(client).to have_received(:execute_request)
     end
+
+    context "when authorization is provided" do
+      it "executes the request with authorization" do
+        stub_api_response
+        body = { test: "yes" }
+        auth = IntelligentFoods::Authorization::Bearer.new(token: "1234")
+        client = IntelligentFoods::ApiClient.new(authentication: auth)
+        request = Net::HTTP::Post.new(URI("http://test.com/orders"))
+        allow(Net::HTTP::Post).to receive(:new).and_return(request)
+
+        client.post(path: "http://test.com/orders", body: body)
+
+        expect(request["Authorization"]).to eq(auth.header)
+      end
+    end
   end
 
   describe "#delete" do
@@ -224,6 +188,20 @@ RSpec.describe IntelligentFoods::ApiClient do
 
       expect(Net::HTTP::Delete).to have_received(:new)
     end
+
+    context "when authorization is provided" do
+      it "executes the request with authorization" do
+        stub_api_response
+        auth = IntelligentFoods::Authorization::Bearer.new(token: "1234")
+        client = IntelligentFoods::ApiClient.new(authentication: auth)
+        request = Net::HTTP::Delete.new(URI("http://test.com/orders/1"))
+        allow(Net::HTTP::Delete).to receive(:new).and_return(request)
+
+        client.delete(path: "http://test.com/orders/1")
+
+        expect(request["Authorization"]).to eq(auth.header)
+      end
+    end
   end
 
   describe "#get" do
@@ -235,6 +213,20 @@ RSpec.describe IntelligentFoods::ApiClient do
       client.get(path: "http://test.com/orders/1")
 
       expect(Net::HTTP::Get).to have_received(:new)
+    end
+
+    context "when authorization is provided" do
+      it "executes the request with authorization" do
+        stub_api_response
+        auth = IntelligentFoods::Authorization::Bearer.new(token: "1234")
+        client = IntelligentFoods::ApiClient.new(authentication: auth)
+        request = Net::HTTP::Get.new(URI("http://test.com/orders/1"))
+        allow(Net::HTTP::Get).to receive(:new).and_return(request)
+
+        client.get(path: "http://test.com/orders/1", authorization: auth)
+
+        expect(request["Authorization"]).to eq(auth.header)
+      end
     end
   end
 end

@@ -2,10 +2,8 @@
 
 module IntelligentFoods
   module Authorization
-    class Bearer < Base
-      def header
-        "Bearer #{token}"
-      end
+    class Blank < Base
+      def header; end
     end
   end
 end
