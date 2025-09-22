@@ -2,25 +2,11 @@
 
 module IntelligentFoods
   class ApiClient
-    attr_accessor :access_token
-    attr_reader :id, :secret
+    attr_reader :api, :authentication
 
-    def initialize(id: nil, secret: nil, client: nil)
-      @id = id
-      @secret = secret
-      @client = client || Net::HTTP
-    end
-
-    def authenticate!
-      uri = URI("#{IntelligentFoods.base_url}/token")
-      body = { client_id: id, client_secret: secret }
-      request = build_request_with_body(uri: uri, body: body)
-      authorization = IntelligentFoods::Authorization::Basic.
-                      factory(client_id: id, client_secret: secret)
-      response = execute_request(request: request, uri: request.uri,
-                                 authorization: authorization)
-      handle_authentication_response(response: response.data)
-      self
+    def initialize(api: nil, authentication: nil)
+      @api = api
+      @authentication = authentication || Authorization::Blank.new
     end
 
     def post(path:, body:)
@@ -29,33 +15,31 @@ module IntelligentFoods
       execute_request(request: request, uri: request.uri)
     end
 
-    def delete(path:)
+    def delete(path:, **)
       uri = URI(path)
       request = Net::HTTP::Delete.new(uri)
       execute_request(request: request, uri: request.uri)
     end
 
-    def get(path:)
+    def get(path:, **)
       uri = URI(path)
       request = Net::HTTP::Get.new(uri)
       execute_request(request: request, uri: request.uri)
     end
 
-    def execute_request(request:, uri:, authorization: default_authorization)
+    def execute_request(request:, uri:)
       Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
-        request["Authorization"] = authorization.header
+        request["Authorization"] = authentication.header
         response = http.request(request)
         handle_response(response: response)
       end
     end
 
-    def authenticated?
-      access_token.present?
+    def self.build(api)
+      new(api: api, authentication: api.authentication)
     end
 
     protected
-
-    attr_reader :encoded_token, :request, :response, :uri
 
     def build_request_with_body(uri:, body:)
       request = Net::HTTP::Post.new(uri)
@@ -74,7 +58,7 @@ module IntelligentFoods
     end
 
     def handle_authentication_error!
-      @access_token = nil
+      api.reset_authentication
       raise AuthenticationError.new(status: 401,
                                     title: "Authentication Failed")
     end
@@ -100,27 +84,6 @@ module IntelligentFoods
 
     def authentication_failed?(response_code)
       response_code.to_i == 401
-    end
-
-    def handle_authentication_response(response:)
-      if response_has_errors?(response)
-        handle_errors(response)
-      else
-        @access_token = response[:access_token]
-      end
-    end
-
-    def response_has_errors?(response)
-      response.has_key?(:error)
-    end
-
-    def handle_errors(response)
-      error = response[:error]
-      fail IntelligentFoods::Error.new(error)
-    end
-
-    def default_authorization
-      IntelligentFoods::Authorization::Bearer.new(token: access_token)
     end
   end
 end

@@ -20,6 +20,12 @@ module ApiHelper
     stub_api_response response: response
   end
 
+  def stub_api_v1_authentication(authenticated: true)
+    api = IntelligentFoods::V1.build
+    allow(IntelligentFoods::V1).to receive(:new).and_return(api)
+    allow(api).to receive(:authenticated?).and_return(authenticated)
+  end
+
   def stub_api_response(response: OpenStruct.new(body: "{}", code: 200),
                         http: double)
     allow(Net::HTTP).to receive(:start).and_yield(http)

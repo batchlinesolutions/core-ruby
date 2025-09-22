@@ -6,8 +6,12 @@ require "net/http"
 require "ostruct"
 
 require "intelligent_foods/api_client"
-require "intelligent_foods/authorization"
+require "intelligent_foods/api/v1"
+require "intelligent_foods/api/v1/authenticator"
+require "intelligent_foods/api_operations/retrieve"
+require "intelligent_foods/authorization/base"
 require "intelligent_foods/authorization/basic"
+require "intelligent_foods/authorization/blank"
 require "intelligent_foods/resources/api_error"
 require "intelligent_foods/authorization/bearer"
 require "intelligent_foods/resources/object"
@@ -30,34 +34,6 @@ module IntelligentFoods
 
     def configure
       yield self
-      refresh_client
-      configure_environment
     end
-
-    def base_url
-      @base_url = "https://api.sunbasket.#{tld}/partner/v1"
-    end
-
-    def client
-      @client ||=
-        IntelligentFoods::ApiClient.new(id: client_id, secret: client_secret)
-    end
-
-    def refresh_client
-      @client = nil
-    end
-
-    protected
-
-    attr_reader :tld
-
-    def configure_environment
-      if environment == "production"
-        @tld = "com"
-      else
-        @tld = "dev"
-      end
-    end
-
   end
 end

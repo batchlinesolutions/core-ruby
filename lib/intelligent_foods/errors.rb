@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module IntelligentFoods
-  class MenuNotFoundError < ApiError; end
+  class ResourceRetrievalError < ApiError; end
 
   class OrderNotCancelledError < ApiError; end
 
