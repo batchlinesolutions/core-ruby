@@ -1,4 +1,5 @@
 module ApiHelper
+  ADDRESS_API_RESPONSE = "spec/support/fixtures/address_response.json".freeze
   MENU_API_RESPONSE = "spec/support/fixtures/menu_response.json".freeze
   ORDER_API_RESPONSE = "spec/support/fixtures/order_response.json".freeze
   ERROR_API_RESPONSE = "spec/support/fixtures/error_response.json".freeze
@@ -61,6 +62,12 @@ module ApiHelper
 
   def build_order_response
     read_order_api_response
+  end
+
+  def build_address_response(valid: true)
+    stubbed_response = parse_json_file(ADDRESS_API_RESPONSE)
+    stubbed_response[:valid] = valid
+    stubbed_response
   end
 
   def stubbed_menu_items

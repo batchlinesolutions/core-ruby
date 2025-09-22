@@ -1,0 +1,23 @@
+{
+	"valid": true,
+	"residential": true,
+  "zip4": "string",
+  "validationState": "VERIFIED",
+  "errorMessage": "string",
+  "suggestions": [
+    {
+      "address": {
+        "address1": "string",
+        "address2": "string",
+        "city": "string",
+        "state": "AL",
+        "zip": "string",
+        "zip4": "string"
+      },
+      "residential": true,
+      "confirmZip4": true,
+      "addressDpvMatchCode": "string",
+      "deliveryPointBarcode": "string"
+    }
+	]
+}  

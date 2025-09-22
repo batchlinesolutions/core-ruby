@@ -3,16 +3,32 @@
 RSpec.describe IntelligentFoods::Address do
   describe "#verify!" do
     it "verifys the address" do
+      address = IntelligentFoods::Address.new(address1: "123 Main Street",
+                                              city: "San Francisco",
+                                              state: "CA",
+                                              zip: "12345")
+      body = build_address_response
+      response = build_response(body: body)
+      stub_api_response response: response
 
-    end
+      result = address.verify!
 
-    it "returns a truthy value" do
-
+      expect(result).to be_valid
     end
 
     context "when the address is invalid" do
       it "returns a falsey value" do
+        address = IntelligentFoods::Address.new(address1: "123 Main Street",
+                                                city: "San Francisco",
+                                                state: "CA",
+                                                zip: "12345")
+        body = build_address_response(valid: false)
+        response = build_response(body: body)
+        stub_api_response response: response
 
+        result = address.verify!
+
+        expect(result).not_to be_valid
       end
     end
   end

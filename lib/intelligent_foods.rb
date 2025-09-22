@@ -11,6 +11,7 @@ require "intelligent_foods/authorization/basic"
 require "intelligent_foods/resources/api_error"
 require "intelligent_foods/authorization/bearer"
 require "intelligent_foods/resources/object"
+require "intelligent_foods/resources/address"
 require "intelligent_foods/resources/order"
 require "intelligent_foods/resources/order_item"
 require "intelligent_foods/serializers/order_item_serializer"
@@ -34,8 +35,13 @@ module IntelligentFoods
       configure_environment
     end
 
-    def base_url
-      @base_url = "https://api.sunbasket.#{tld}/partner/v1"
+    def base_url(api_version: "v1")
+      case api_version
+      when "v1"
+        "https://api.sunbasket.#{tld}/partner/v1"
+      else
+        "https://api.intelligentfoods.#{tld}"
+      end
     end
 
     def client
