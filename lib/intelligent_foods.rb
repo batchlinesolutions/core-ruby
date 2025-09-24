@@ -26,6 +26,9 @@ require "intelligent_foods/errors"
 module IntelligentFoods
   class Error < StandardError; end
 
+  API_VERSION_V1 = "v1"
+  API_VERSION_V2 = "v2"
+
   class << self
     attr_accessor :client_id, :client_secret, :environment
 
@@ -35,10 +38,10 @@ module IntelligentFoods
       configure_environment
     end
 
-    def base_url(api_version: "v1")
-      return "https://api.sunbasket.#{tld}/partner/v1" if api_version == "v1"
-
-      "https://api.intelligentfoods.#{tld}"
+    def base_url(api_version: API_VERSION_V1)
+      subdomain = determine_subdomain(api_version)
+      api_path = determine_api_path(api_version)
+      "https://api.#{subdomain}.#{tld}#{api_path}"
     end
 
     def client
@@ -53,6 +56,16 @@ module IntelligentFoods
     protected
 
     attr_reader :tld
+
+    def determine_subdomain(api_version)
+      return "sunbasket" if api_version == API_VERSION_V1
+
+      "intelligentfoods"
+    end
+
+    def determine_api_path(api_version)
+      return "/partner/v1" if api_version == API_VERSION_V1
+    end
 
     def configure_environment
       if environment == "production"
