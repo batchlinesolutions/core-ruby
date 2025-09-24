@@ -2,7 +2,7 @@
 
 module IntelligentFoods
   class Address < IntelligentFoods::Object
-    def verify!
+    def verify
       base_url = IntelligentFoods.base_url(api_version: "v2")
       uri = URI("#{base_url}/address/validate")
       basic_auth_token = client.basic_auth_token
