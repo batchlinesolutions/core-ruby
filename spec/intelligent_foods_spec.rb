@@ -52,6 +52,32 @@ RSpec.describe IntelligentFoods do
 
         expect(IntelligentFoods.base_url).to eq(staging_url)
       end
+
+      context "the api version is v1" do
+        it "returns the correct url" do
+          IntelligentFoods.configure do |config|
+            config.environment = "staging"
+          end
+          staging_url = "https://api.sunbasket.dev/partner/v1"
+
+          result = IntelligentFoods.base_url(api_version: "v1")
+
+          expect(result).to eq(staging_url)
+        end
+      end
+
+      context "the api version is v2" do
+        it "returns the correct url" do
+          IntelligentFoods.configure do |config|
+            config.environment = "staging"
+          end
+          staging_url = "https://api.intelligentfoods.dev"
+
+          result = IntelligentFoods.base_url(api_version: "v2")
+
+          expect(result).to eq(staging_url)
+        end
+      end
     end
 
     context "environment is production" do
@@ -62,6 +88,32 @@ RSpec.describe IntelligentFoods do
         production_url = "https://api.sunbasket.com/partner/v1"
 
         expect(IntelligentFoods.base_url).to eq(production_url)
+      end
+
+      context "the api version is v1" do
+        it "returns the correct url" do
+          IntelligentFoods.configure do |config|
+            config.environment = "production"
+          end
+          production_url = "https://api.sunbasket.com/partner/v1"
+
+          result = IntelligentFoods.base_url(api_version: "v1")
+
+          expect(result).to eq(production_url)
+        end
+      end
+
+      context "the api version is v2" do
+        it "returns the correct url" do
+          IntelligentFoods.configure do |config|
+            config.environment = "production"
+          end
+          production_url = "https://api.intelligentfoods.com"
+
+          result = IntelligentFoods.base_url(api_version: "v2")
+
+          expect(result).to eq(production_url)
+        end
       end
     end
 

@@ -36,12 +36,9 @@ module IntelligentFoods
     end
 
     def base_url(api_version: "v1")
-      case api_version
-      when "v1"
-        "https://api.sunbasket.#{tld}/partner/v1"
-      else
-        "https://api.intelligentfoods.#{tld}"
-      end
+      return "https://api.sunbasket.#{tld}/partner/v1" if api_version == "v1"
+
+      "https://api.intelligentfoods.#{tld}"
     end
 
     def client
