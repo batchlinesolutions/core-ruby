@@ -25,7 +25,7 @@ module IntelligentFoods
     end
 
     def create!
-      uri = URI("#{IntelligentFoods.base_url}/order")
+      uri = URI("#{api.base_url}/order")
       request = client.build_request_with_body(uri: uri, body: request_body)
       response = client.execute_request(request: request, uri: uri)
       if response.success?
@@ -37,7 +37,7 @@ module IntelligentFoods
     end
 
     def cancel!
-      uri = URI("#{IntelligentFoods.base_url}/order/#{id}")
+      uri = URI("#{api.base_url}/order/#{id}")
       request = Net::HTTP::Delete.new(uri)
       response = client.execute_request(request: request, uri: uri)
       if response.success?

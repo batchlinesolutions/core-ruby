@@ -7,13 +7,16 @@ RSpec.describe IntelligentFoods::Address do
                                               city: "San Francisco",
                                               state: "CA",
                                               zip: "12345")
-      allow(IntelligentFoods).to receive(:base_url).and_call_original
+      client = IntelligentFoods.client
+      allow(IntelligentFoods).to receive(:client).and_return(client)
+      allow(client).to receive(:build_request_with_body).and_call_original
+      expected_uri = URI("https://api.intelligentfoods.dev/address/validate")
       stub_api_response
 
       address.verify
 
-      expect(IntelligentFoods).to have_received(:base_url).
-        with(api_version: IntelligentFoods::API_VERSION_V2)
+      expect(client).to have_received(:build_request_with_body).
+        with(hash_including(uri: expected_uri))
     end
 
     context "when the response is valid" do
