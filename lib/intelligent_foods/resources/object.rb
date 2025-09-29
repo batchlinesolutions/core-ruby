@@ -11,5 +11,9 @@ module IntelligentFoods
     def client
       @client ||= IntelligentFoods.client
     end
+
+    def api
+      @api ||= IntelligentFoods::ApiAdapterFactory.build(self)
+    end
   end
 end

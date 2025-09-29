@@ -3,12 +3,16 @@
 module IntelligentFoods
   class ApiClient
     attr_accessor :access_token
-    attr_reader :id, :secret
+    attr_reader :id, :secret, :basic_auth_token
 
-    def initialize(id: nil, secret: nil, client: nil)
+    def initialize(id: nil, secret: nil, client: nil,
+                   username: nil, password: nil)
       @id = id
       @secret = secret
       @client = client || Net::HTTP
+      @basic_auth_token = IntelligentFoods::Authorization::Basic.
+                          factory(client_id: username,
+                                  client_secret: password)
     end
 
     def authenticate!

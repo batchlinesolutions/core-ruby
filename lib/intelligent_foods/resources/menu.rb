@@ -13,7 +13,8 @@ module IntelligentFoods
     end
 
     def self.all
-      uri = URI("#{IntelligentFoods.base_url}/menus")
+      api = IntelligentFoods::ApiAdapterFactory.build(new)
+      uri = URI("#{api.base_url}/menus")
       request = Net::HTTP::Get.new(uri)
       client = IntelligentFoods.client
       response = client.execute_request(request: request, uri: uri)
@@ -25,7 +26,8 @@ module IntelligentFoods
     end
 
     def self.find(menu_id)
-      uri = URI("#{IntelligentFoods.base_url}/menu/#{menu_id}")
+      api = IntelligentFoods::ApiAdapterFactory.build(new)
+      uri = URI("#{api.base_url}/menu/#{menu_id}")
       request = Net::HTTP::Get.new(uri)
       client = IntelligentFoods.client
       response = client.execute_request(request: request, uri: uri)
