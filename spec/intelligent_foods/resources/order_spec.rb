@@ -25,7 +25,7 @@ RSpec.describe IntelligentFoods::Order do
         callback_url = "https://api.domain.com/callback"
         order = build(:order, callback_url: callback_url)
         stub_api_response
-        request = Net::HTTP::Post.new("http://domain.com")
+        request = Net::HTTP::Post.new(URI("http://domain.com"))
         allow(Net::HTTP::Post).to receive(:new).and_return(request)
 
         order.create!

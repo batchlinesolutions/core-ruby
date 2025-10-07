@@ -26,8 +26,8 @@ module ApiHelper
     allow(http).to receive(:request).and_return(response)
   end
 
-  def build_stubbed_post(url: "example.com")
-    request = Net::HTTP::Post.new(url)
+  def build_stubbed_post(url: "http://example.com")
+    request = Net::HTTP::Post.new(URI(url))
     allow(Net::HTTP::Post).to receive(:new).and_return(request)
     request
   end

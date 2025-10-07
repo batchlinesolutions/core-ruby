@@ -13,10 +13,9 @@ module IntelligentFoods
     end
 
     def self.all
-      uri = URI("#{IntelligentFoods.base_url}/menus")
-      request = Net::HTTP::Get.new(uri)
+      path = "#{IntelligentFoods.base_url}/menus"
       client = IntelligentFoods.client
-      response = client.execute_request(request: request, uri: uri)
+      response = client.get(path: path)
       if response.success?
         response.data.map { |id| Menu.new(id: id) }
       else
@@ -25,10 +24,9 @@ module IntelligentFoods
     end
 
     def self.find(menu_id)
-      uri = URI("#{IntelligentFoods.base_url}/menu/#{menu_id}")
-      request = Net::HTTP::Get.new(uri)
+      path = "#{IntelligentFoods.base_url}/menu/#{menu_id}"
       client = IntelligentFoods.client
-      response = client.execute_request(request: request, uri: uri)
+      response = client.get(path: path)
       if response.success?
         Menu.build_from_response(response.data)
       else
