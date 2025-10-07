@@ -17,10 +17,28 @@ module IntelligentFoods
       request = build_request_with_body(uri: uri, body: body)
       authorization = IntelligentFoods::Authorization::Basic.
                       factory(client_id: id, client_secret: secret)
-      response = execute_request(request: request, uri: uri,
+      response = execute_request(request: request, uri: request.uri,
                                  authorization: authorization)
       handle_authentication_response(response: response.data)
       self
+    end
+
+    def post(path:, body:)
+      uri = URI(path)
+      request = build_request_with_body(uri: uri, body: body)
+      execute_request(request: request, uri: request.uri)
+    end
+
+    def delete(path:)
+      uri = URI(path)
+      request = Net::HTTP::Delete.new(uri)
+      execute_request(request: request, uri: request.uri)
+    end
+
+    def get(path:)
+      uri = URI(path)
+      request = Net::HTTP::Get.new(uri)
+      execute_request(request: request, uri: request.uri)
     end
 
     def execute_request(request:, uri:, authorization: default_authorization)
@@ -31,13 +49,6 @@ module IntelligentFoods
       end
     end
 
-    def build_request_with_body(uri:, body:)
-      request = Net::HTTP::Post.new(uri)
-      request.body = body.to_json
-      request["content-type"] = "application/json"
-      request
-    end
-
     def authenticated?
       access_token.present?
     end
@@ -45,6 +56,13 @@ module IntelligentFoods
     protected
 
     attr_reader :encoded_token, :request, :response, :uri
+
+    def build_request_with_body(uri:, body:)
+      request = Net::HTTP::Post.new(uri)
+      request.body = body.to_json
+      request["content-type"] = "application/json"
+      request
+    end
 
     def handle_response(response:)
       if authentication_failed?(response.code)
