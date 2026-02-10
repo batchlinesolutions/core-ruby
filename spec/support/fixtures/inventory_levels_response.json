@@ -1,0 +1,21 @@
+{
+  "products": [
+    {
+      "product_code": "MP0527",
+      "inventory_levels": [
+        {
+          "date": "2020-04-19",
+          "inventory_by_distribution_center": [
+            {
+              "distribution_center": "WEST_COAST",
+              "quantity": "2.0"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "missing_product_codes": [
+    "string"
+  ]
+}
