@@ -19,7 +19,7 @@ module IntelligentFoods
                          shipping_fee: 9.99, items: items)
         end
 
-        def self.find(id)
+        def self.retrieve(id)
           items = [Fake::MenuItem.create]
           OpenStruct.new(id: id, deadline: Time.zone.now,
                          shipping_fee: 9.99, items: items)
