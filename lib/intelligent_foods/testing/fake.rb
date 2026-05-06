@@ -5,6 +5,23 @@ module IntelligentFoods
     class Fake
       def self.configure(*); end
 
+      class DistributionCenterInventory
+        def self.create(name: "WEST_COAST", quantity: 100)
+          OpenStruct.new(distribution_center: name, quantity: quantity)
+        end
+      end
+
+      class InventoryLevel
+        def self.create(sku: "SKU1", date: Date.today.to_s,
+                        dc_inventory: [DistributionCenterInventory.create])
+          inventory_level = OpenStruct.new(
+            date: date,
+            inventory_by_distribution_center: dc_inventory
+          )
+          OpenStruct.new(sku: sku, inventory_levels: [inventory_level])
+        end
+      end
+
       class MenuItem
         def self.create(id: SecureRandom.uuid, sku: "SKU1",
                         name: "FakeMenuItem")
