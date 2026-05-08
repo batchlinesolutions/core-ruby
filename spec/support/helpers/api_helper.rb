@@ -4,6 +4,8 @@ module ApiHelper
   ERROR_API_RESPONSE = "spec/support/fixtures/error_response.json".freeze
   INVENTORY_LEVELS_API_RESPONSE =
     "spec/support/fixtures/inventory_levels_response.json".freeze
+  PRODUCT_API_RESPONSE =
+    "spec/support/fixtures/product_response.json".freeze
 
   def authentication_response(access_token:)
     build_response body: { access_token: access_token }
@@ -31,6 +33,12 @@ module ApiHelper
   def stub_api_v2_authentication(authenticated: true)
     api = Bls::Core::V2.build
     allow(Bls::Core::V2).to receive(:new).and_return(api)
+    allow(api).to receive(:authenticated?).and_return(authenticated)
+  end
+
+  def stub_api_v2_authentication(authenticated: true)
+    api = IntelligentFoods::V2.build
+    allow(IntelligentFoods::V2).to receive(:new).and_return(api)
     allow(api).to receive(:authenticated?).and_return(authenticated)
   end
 
@@ -70,6 +78,10 @@ module ApiHelper
     parse_json_file(INVENTORY_LEVELS_API_RESPONSE)
   end
 
+  def read_product_api_response
+    parse_json_file(PRODUCT_API_RESPONSE)
+  end
+
   def build_menu_response(menu_id: "2023-01-01", menu_items: [])
     stubbed_response = read_menu_api_response
     stubbed_response[:id] = menu_id
@@ -83,6 +95,12 @@ module ApiHelper
 
   def build_inventory_levels_response
     read_inventory_levels_api_response
+  end
+
+  def build_product_response(product_id: "string")
+    stubbed_response = read_product_api_response
+    stubbed_response[:code] = product_id
+    stubbed_response
   end
 
   def stubbed_menu_items
