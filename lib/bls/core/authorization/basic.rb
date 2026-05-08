@@ -8,8 +8,8 @@ module Bls
           "Basic #{token}"
         end
 
-        def self.factory(client_id:, client_secret:)
-          encoded_token = Base64.strict_encode64("#{client_id}:#{client_secret}")
+        def self.factory(username:, password:)
+          encoded_token = Base64.strict_encode64("#{username}:#{password}")
           new(token: encoded_token)
         end
       end

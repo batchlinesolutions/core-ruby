@@ -22,7 +22,9 @@ module Bls
 
       def self.build(response)
         data = response.data
-        data => { status:, title:, details: }
+        status = data.fetch(:status, data[:type])
+        title = data.fetch(:title, data[:message])
+        details = data[:details]
         new(status: status, title: title, details: details)
       end
 

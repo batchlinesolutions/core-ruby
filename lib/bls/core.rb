@@ -7,7 +7,9 @@ require "ostruct"
 
 require_relative "core/api_client"
 require_relative "core/api/v1"
+require_relative "core/api/v2"
 require_relative "core/api/v1/authenticator"
+require_relative "core/api/v2/authenticator"
 require_relative "core/api_operations/retrieve"
 require_relative "core/authorization/base"
 require_relative "core/authorization/basic"
@@ -32,7 +34,8 @@ module Bls
     class Error < StandardError; end
 
     class << self
-      attr_accessor :client_id, :client_secret, :environment
+      attr_accessor :client_id, :client_secret, :environment, :username,
+                    :password
 
       def configure
         yield self

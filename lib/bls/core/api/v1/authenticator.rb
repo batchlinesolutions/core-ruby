@@ -15,7 +15,7 @@ module Bls
         path = "#{base_url}/token"
         body = { client_id: client_id, client_secret: client_secret }
         auth = Authorization::Basic.
-               factory(client_id: client_id, client_secret: client_secret)
+               factory(username: client_id, password: client_secret)
         client = Core::ApiClient.new(authentication: auth)
         response = client.post(path: path, body: body)
         handle_authentication_response!(response: response.data)
