@@ -1,0 +1,5 @@
+module Bls
+  module Core
+    VERSION: String
+  end
+end
