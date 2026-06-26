@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    intelligent_foods (0.0.0)
+    bls-core (0.0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -76,8 +76,8 @@ PLATFORMS
   arm64-darwin-21
 
 DEPENDENCIES
+  bls-core!
   factory_bot
-  intelligent_foods!
   json-schema
   pry (~> 0.14)
   rake (~> 13.0)

@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :order, class: "IntelligentFoods::Order" do
+  factory :order, class: "Bls::Core::Order" do
     menu
     recipient
     delivery_date { Date.today.to_s }
@@ -14,7 +14,7 @@ FactoryBot.define do
     end
   end
 
-  factory :recipient, class: "IntelligentFoods::Recipient" do
+  factory :recipient, class: "Bls::Core::Recipient" do
     name { "First Name" }
     street1 { "123 Main Street" }
     street2 { "Apt 2B" }
@@ -27,14 +27,14 @@ FactoryBot.define do
     delivery_instructions { "Door code 1234" }
   end
 
-  factory :menu, class: "IntelligentFoods::Menu" do
+  factory :menu, class: "Bls::Core::Menu" do
     id { Date.today.to_s }
     deadline { Time.now }
     shipping_fee { 9.99 }
     items { create_list :menu_item, 3 }
   end
 
-  factory :menu_item, class: "IntelligentFoods::MenuItem" do
+  factory :menu_item, class: "Bls::Core::MenuItem" do
     sequence :id do |n|
       "d89397e1bad49c3b855df4406e5bf0#{n}"
     end
@@ -47,7 +47,7 @@ FactoryBot.define do
     end
   end
 
-  factory :order_item, class: "IntelligentFoods::OrderItem" do
+  factory :order_item, class: "Bls::Core::OrderItem" do
     sequence :sku do |n|
       "IF233#{n}"
     end

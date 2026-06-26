@@ -23,8 +23,8 @@ module ApiHelper
   end
 
   def stub_api_v1_authentication(authenticated: true)
-    api = IntelligentFoods::V1.build
-    allow(IntelligentFoods::V1).to receive(:new).and_return(api)
+    api = Bls::Core::V1.build
+    allow(Bls::Core::V1).to receive(:new).and_return(api)
     allow(api).to receive(:authenticated?).and_return(authenticated)
   end
 

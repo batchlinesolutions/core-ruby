@@ -3,7 +3,7 @@
 require "factory_bot"
 require "json-schema"
 require "pry"
-require "intelligent_foods"
+require "bls/core"
 require "webmock"
 
 Dir["./spec/support/**/*.rb"].sort.each { |f| require f }
