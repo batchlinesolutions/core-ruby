@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe IntelligentFoods::Product do
+RSpec.describe Bls::Core::Product do
   describe ".retrieve" do
     it "returns the product" do
       product_id = "MP0527"
@@ -9,7 +9,7 @@ RSpec.describe IntelligentFoods::Product do
       stub_api_v2_authentication
       stub_api_response response: response
 
-      result = IntelligentFoods::Product.retrieve(product_id)
+      result = Bls::Core::Product.retrieve(product_id)
 
       expect(result.code).to eq(product_id)
     end
