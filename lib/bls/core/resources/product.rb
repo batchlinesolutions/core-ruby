@@ -14,14 +14,14 @@ module Bls
       def self.build_from_response(data)
         product = build(data)
         product.ingredients = Ingredient.build_from_array(data[:ingredients])
-        product.nutrition_facts = NutritionFact.
-                                  build_from_array(data[:nutrition_facts])
-        product.nutrition_facts_cooked = NutritionFact.
-                                         build_from_array(
-                                           data.fetch(:nutrition_facts_cooked, [])
-                                         )
+        as_packaged = NutritionFact.
+                      build_from_array(data[:nutrition_facts][:as_packaged])
+        as_cooked = NutritionFact.
+                    build_from_array(data[:nutrition_facts][:as_cooked])
         product.allergens = Allergen.build_from_array(data[:allergens])
         product.dietary_tags = DietaryTag.build_from_array(data[:dietary_tags])
+        product.nutrition_facts = { as_packaged: as_packaged,
+                                    as_cooked: as_cooked }
         product
       end
     end

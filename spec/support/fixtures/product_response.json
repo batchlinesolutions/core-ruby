@@ -12,30 +12,32 @@
   },
   "ingredients": [
     {
-      "inventory_code": "string",
+      "code": "string",
       "name": "string",
       "quantity": 0.1,
       "unit": "string"
     }
   ],
-  "nutrition_facts": [
-    {
-      "code": "CALORIES",
-      "amount": 0,
-      "unit": "string"
-    }
-  ],
-  "nutrition_facts_cooked": [
-    {
-      "code": "CALORIES",
-      "amount": 0,
-      "unit": "string"
-    }
-  ],
+  "nutrition_facts": {
+    "as_packaged": [
+      {
+        "code": "CALORIES",
+        "amount": 0,
+        "unit": "string"
+      }
+    ],
+    "as_cooked": [
+      {
+        "code": "CALORIES",
+        "amount": 0,
+        "unit": "string"
+      }
+    ]
+  },
   "allergens": [
     {
       "code": "MILK",
-      "source": "ANCHOVY"
+      "source": "NONE"
     }
   ],
   "dietary_tags": [
