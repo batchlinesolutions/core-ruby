@@ -13,5 +13,18 @@ RSpec.describe Bls::Core::Product do
 
       expect(result.code).to eq(product_id)
     end
+
+    it "returns packaged and cooked nutrition facts" do
+      body = build_product_response
+      response = build_response(body: body)
+      stub_api_v2_authentication
+      stub_api_response response: response
+
+      result = Bls::Core::Product.retrieve("TEST123")
+
+      expect(result.nutrition_facts.keys).to match_array(
+        [:as_packaged, :as_cooked]
+      )
+    end
   end
 end
