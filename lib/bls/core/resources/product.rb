@@ -17,7 +17,8 @@ module Bls
         as_packaged = NutritionFact.
                       build_from_array(data[:nutrition_facts][:as_packaged])
         as_cooked = NutritionFact.
-                    build_from_array(data[:nutrition_facts][:as_cooked])
+                    build_from_array(data[:nutrition_facts].
+                                     fetch(:as_cooked, []))
         product.allergens = Allergen.build_from_array(data[:allergens])
         product.dietary_tags = DietaryTag.build_from_array(data[:dietary_tags])
         product.nutrition_facts = { as_packaged: as_packaged,
