@@ -67,8 +67,8 @@ RSpec.describe Bls::Core::V2 do
 
   describe "reset authentication" do
     it "removes the present authentication" do
-      auth = IntelligentFoods::Authorization::Basic.new(token: "1234")
-      api = IntelligentFoods::V2.new(authentication: auth)
+      auth = Bls::Core::Authorization::Basic.new(token: "1234")
+      api = Bls::Core::V2.new(authentication: auth)
 
       result = api.reset_authentication
 
@@ -76,8 +76,8 @@ RSpec.describe Bls::Core::V2 do
     end
 
     it "is not authenticated" do
-      auth = IntelligentFoods::Authorization::Basic.new(token: "1234")
-      api = IntelligentFoods::V2.new(authentication: auth)
+      auth = Bls::Core::Authorization::Basic.new(token: "1234")
+      api = Bls::Core::V2.new(authentication: auth)
 
       result = api.reset_authentication
 
@@ -89,7 +89,7 @@ RSpec.describe Bls::Core::V2 do
     it "sets the environment" do
       config = build_config(environment: "preview")
 
-      result = IntelligentFoods::V2.build(config: config)
+      result = Bls::Core::V2.build(config: config)
 
       expect(result.environment).to eq("preview")
     end
@@ -97,7 +97,7 @@ RSpec.describe Bls::Core::V2 do
     it "sets the username" do
       config = build_config(username: "secretUsername")
 
-      result = IntelligentFoods::V2.build(config: config)
+      result = Bls::Core::V2.build(config: config)
 
       expect(result.username).to eq("secretUsername")
     end
@@ -105,7 +105,7 @@ RSpec.describe Bls::Core::V2 do
     it "sets the password" do
       config = build_config(password: "secretPassword")
 
-      result = IntelligentFoods::V2.build(config: config)
+      result = Bls::Core::V2.build(config: config)
 
       expect(result.password).to eq("secretPassword")
     end
@@ -118,10 +118,10 @@ RSpec.describe Bls::Core::V2 do
   end
 
   def build_stubbed_authenticator(api)
-    authenticator = IntelligentFoods::V2::Authenticator.build(api)
+    authenticator = Bls::Core::V2::Authenticator.build(api)
     authentication = authenticator.authentication
-    client = IntelligentFoods::ApiClient.new(authentication: authentication)
-    allow(IntelligentFoods::V2::Authenticator).to receive(:build).
+    client = Bls::Core::ApiClient.new(authentication: authentication)
+    allow(Bls::Core::V2::Authenticator).to receive(:build).
       and_return(authenticator)
     allow(authenticator).to receive(:save!).and_return(client)
     authenticator
