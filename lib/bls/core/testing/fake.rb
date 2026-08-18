@@ -6,6 +6,12 @@ module Bls
       class Fake
         def self.configure(*); end
 
+        class Allergen
+          def self.new(code: "MILK", source: "ANCHOVY")
+            OpenStruct.new(code: code, source: source)
+          end
+        end
+
         class DistributionCenterInventory
           def self.create(name: "WEST_COAST", quantity: 100)
             OpenStruct.new(distribution_center: name, quantity: quantity)
@@ -87,6 +93,15 @@ module Bls
         class OrderItem
           def self.new(sku:, quantity:, protein_sku:)
             OpenStruct.new(sku: sku, quantity: quantity, protein_sku: protein_sku)
+          end
+        end
+
+        class Product
+          def self.new(code:, name:, status: "DRAFT", nutrition_facts: [])
+            OpenStruct.new(code: code, name: name, status: status,
+                           nutrition_facts: nutrition_facts,
+                           allergens: [Fake::Allergen.new],
+                           dietary_tags: ["NUTS"])
           end
         end
 
