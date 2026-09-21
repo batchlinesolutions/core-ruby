@@ -109,10 +109,10 @@ module Bls
           }
         end
 
-        def self.product(event_type: "PRODUCT_UPDATED",
-                         event_id: SecureRandom.uuid,
-                         sku: "S336",
-                         status: "PUBLISHED")
+        def self.product_callback(event_type: "PRODUCT_UPDATED",
+                                  event_id: SecureRandom.uuid,
+                                  sku: "S336",
+                                  status: "PUBLISHED")
           {
             event_id: event_id,
             event_type: event_type,
