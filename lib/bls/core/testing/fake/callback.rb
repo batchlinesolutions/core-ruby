@@ -271,15 +271,15 @@ module Bls
               allergens: [
                 {
                   code: "WHEAT",
-                  source: null,
+                  source: nil,
                 },
                 {
                   code: "MILK",
-                  source: null,
+                  source: nil,
                 },
                 {
                   code: "EGGS",
-                  source: null,
+                  source: nil,
                 },
               ],
               dietary_tags: [
