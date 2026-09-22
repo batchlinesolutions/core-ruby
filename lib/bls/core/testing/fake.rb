@@ -125,7 +125,7 @@ module Bls
           def self.new(code: "BL123", name: "Meal", status: "DRAFT",
                        nutrition_facts: [Fake::NutritionFact.create])
             OpenStruct.new(code: code, name: name, status: status,
-                           nutrition_facts: nutrition_facts,
+                           nutrition_facts: { as_packaged: nutrition_facts },
                            allergens: [Fake::Allergen.create],
                            dietary_tags: [Fake::DietaryTag.create])
           end
