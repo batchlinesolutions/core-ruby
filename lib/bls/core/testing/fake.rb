@@ -117,17 +117,22 @@ module Bls
 
         class OrderItem
           def self.new(sku:, quantity:, protein_sku:)
-            OpenStruct.new(sku: sku, quantity: quantity, protein_sku: protein_sku)
+            OpenStruct.new(sku: sku, quantity: quantity,
+                           protein_sku: protein_sku)
           end
         end
 
         class Product
           def self.new(code: "BL123", name: "Meal", status: "DRAFT",
-                       nutrition_facts: [Fake::NutritionFact.create])
+                       nutrition_facts: [Fake::NutritionFact.create],
+                       ingredients: [Fake::Ingredient.create],
+                       allergens: [Fake::Allergen.create],
+                       dietary_tags: [Fake::DietaryTag.create])
             OpenStruct.new(code: code, name: name, status: status,
+                           ingredients: ingredients,
                            nutrition_facts: { as_packaged: nutrition_facts },
-                           allergens: [Fake::Allergen.create],
-                           dietary_tags: [Fake::DietaryTag.create])
+                           allergens: allergens,
+                           dietary_tags: dietary_tags)
           end
 
           def self.build_from_response(*)
