@@ -128,6 +128,10 @@ module Bls
                            allergens: [Fake::Allergen.create],
                            dietary_tags: [Fake::DietaryTag.create])
           end
+
+          def self.build_from_response(*)
+            Fake::Product.new
+          end
         end
 
         def self.client
