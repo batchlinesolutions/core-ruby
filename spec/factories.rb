@@ -14,6 +14,15 @@ FactoryBot.define do
     end
   end
 
+  factory :fulfillment, class: "Bls::Core::Fulfillment" do
+    address { build(:fulfillment_address) }
+    delivery_date { Date.today.to_s }
+    items { [build(:fulfillment_item)] }
+    sequence :order_id do |n|
+      "d89397e1bad49c3b855df4406e5bf0#{n}"
+    end
+  end
+
   factory :recipient, class: "Bls::Core::Recipient" do
     name { "First Name" }
     street1 { "123 Main Street" }
@@ -55,5 +64,25 @@ FactoryBot.define do
       "IF829#{n}"
     end
     quantity { 1 }
+  end
+
+  factory :fulfillment_item, class: "Bls::Core::FulfillmentItem" do
+    sequence :code do |n|
+      "MP00#{n}"
+    end
+    quantity { 1 }
+  end
+
+  factory :fulfillment_address, class: "Bls::Core::FulfillmentAddress" do
+    name { "First Name" }
+    street1 { "123 Main Street" }
+    street2 { "Apt 2B" }
+    city { "Springfield" }
+    state { "NY" }
+    zip { "19191" }
+    zip4 { "1234" }
+    email { "email@domain.com" }
+    phone { "5555555555" }
+    delivery_notes { "Door code 1234" }
   end
 end

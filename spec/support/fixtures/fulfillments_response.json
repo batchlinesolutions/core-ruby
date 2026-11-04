@@ -1,0 +1,56 @@
+{
+  "total_elements": 1,
+  "total_pages": 1,
+  "size": 20,
+  "content": [
+    {
+      "fulfillment_id": "f-123",
+      "created_at": "2026-11-02T19:17:12.807Z",
+      "updated_at": "2026-11-02T19:17:12.807Z",
+      "delivery_date": "2026-11-02",
+      "packing_date": "2026-11-01",
+      "shipping_date": "2026-11-01",
+      "packing_treatment": "STANDARD",
+      "shipment_service_level": "STANDARD",
+      "address": {
+        "address1": "123 Main Street",
+        "address2": "Apt 2B",
+        "city": "Springfield",
+        "state": "NY",
+        "zip": "19191",
+        "zip4": "1234"
+      },
+      "order_id": "1337",
+      "customer_id": "c-1",
+      "packing_notes": "Fragile",
+      "shipments": [
+        {
+          "shipment_id": "s-1",
+          "box_size_code": "M",
+          "ice_type": "GEL",
+          "carrier_service_type": "GROUND",
+          "carrier": "FEDEX",
+          "tracking_code": "TRACK1",
+          "tracking_url": "https://domain.com/track/TRACK1",
+          "delivery_status": "PRE_TRANSIT",
+          "delivery_status_detail": "label_created",
+          "carrier_delivered_at": null,
+          "estimated_packaging_date": "2026-11-01",
+          "shipping_date": "2026-11-01",
+          "requested_delivery_date": "2026-11-02",
+          "estimated_delivery_date": "2026-11-02",
+          "items": [
+            { "reference_item_id": "ref-1", "code": "MP0001", "quantity": 2 }
+          ]
+        }
+      ],
+      "eligible_for_updating": true,
+      "status": "INGESTED"
+    }
+  ],
+  "number": 0,
+  "number_of_elements": 1,
+  "first": true,
+  "last": true,
+  "empty": false
+}

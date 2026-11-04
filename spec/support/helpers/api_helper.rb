@@ -1,7 +1,13 @@
 module ApiHelper
   MENU_API_RESPONSE = "spec/support/fixtures/menu_response.json".freeze
   ORDER_API_RESPONSE = "spec/support/fixtures/order_response.json".freeze
+  FULFILLMENT_API_RESPONSE =
+    "spec/support/fixtures/fulfillment_response.json".freeze
+  FULFILLMENTS_API_RESPONSE =
+    "spec/support/fixtures/fulfillments_response.json".freeze
   ERROR_API_RESPONSE = "spec/support/fixtures/error_response.json".freeze
+  V2_ERROR_API_RESPONSE =
+    "spec/support/fixtures/error_response_v2.json".freeze
   INVENTORY_LEVELS_API_RESPONSE =
     "spec/support/fixtures/inventory_levels_response.json".freeze
   PRODUCT_API_RESPONSE =
@@ -48,6 +54,12 @@ module ApiHelper
     request
   end
 
+  def build_stubbed_api_v2_client
+    client = Bls::Core::V2.build.client
+    allow(Bls::Core::ApiClient).to receive(:build).and_return(client)
+    client
+  end
+
   def build_response(body: {}, http_status_code: 200)
     OpenStruct.new(body: JSON.generate(body), code: http_status_code)
   end
@@ -58,6 +70,10 @@ module ApiHelper
 
   def read_error_response
     parse_json_file(ERROR_API_RESPONSE)
+  end
+
+  def read_v2_error_response
+    parse_json_file(V2_ERROR_API_RESPONSE)
   end
 
   def read_menu_api_response
@@ -85,6 +101,18 @@ module ApiHelper
 
   def build_order_response
     read_order_api_response
+  end
+
+  def build_fulfillment_response(
+    fulfillment_id: "65b597420cf24f90a541c19b3f003d04"
+  )
+    stubbed_response = parse_json_file(FULFILLMENT_API_RESPONSE)
+    stubbed_response[:fulfillment_id] = fulfillment_id
+    stubbed_response
+  end
+
+  def build_fulfillments_response
+    parse_json_file(FULFILLMENTS_API_RESPONSE)
   end
 
   def build_inventory_levels_response
