@@ -93,6 +93,45 @@ module Bls
           end
         end
 
+        class FulfillmentAddress
+          def self.new(name: nil, company: nil, street1: nil, street2: nil,
+                       city: nil, state: nil, zip: nil, zip4: nil,
+                       country: nil, email: nil, phone: nil,
+                       delivery_notes: nil)
+            OpenStruct.new(name: name, company: company, street1: street1,
+                           street2: street2, city: city, state: state,
+                           zip: zip, zip4: zip4, country: country,
+                           email: email, phone: phone,
+                           delivery_notes: delivery_notes)
+          end
+        end
+
+        class Shipment
+          def self.create(id: SecureRandom.uuid, carrier: "FEDEX",
+                          tracking_code: SecureRandom.uuid,
+                          tracking_url: "https://domain.com/track/1234",
+                          delivery_status: "PRE_TRANSIT",
+                          estimated_delivery_date: Date.today.to_s,
+                          items: [Fake::FulfillmentItem.new(code: "MP0001",
+                                                            quantity: 1)])
+            OpenStruct.new(id: id, shipment_id: id, carrier: carrier,
+                           tracking_code: tracking_code,
+                           tracking_url: tracking_url,
+                           delivery_status: delivery_status,
+                           estimated_delivery_date: estimated_delivery_date,
+                           items: items)
+          end
+        end
+
+        class FulfillmentItem
+          def self.new(code:, quantity:, reference_item_id: nil,
+                       packaging_group: nil)
+            OpenStruct.new(code: code, quantity: quantity,
+                           reference_item_id: reference_item_id,
+                           packaging_group: packaging_group)
+          end
+        end
+
         class Order
           def initialize(*)
             self
@@ -112,6 +151,58 @@ module Bls
           def cancel!
             OpenStruct.new(id: SecureRandom.uuid,
                            status: "CANCELLED")
+          end
+        end
+
+        class Fulfillment < OpenStruct
+          ACCEPTED_STATUSES = %w[INGESTED PROCESSING PROCESSED COMPLETED].freeze
+
+          def self.retrieve(id)
+            create(id: id)
+          end
+
+          def self.retrieve_all(page:, delivery_date_from: nil,
+                                delivery_date_to: nil,
+                                order_id: SecureRandom.uuid, size: nil)
+            return [] unless page.zero?
+
+            delivery_date = Date.today.to_s
+            fulfillment = create(order_id: order_id,
+                                 delivery_date: delivery_date)
+            size.nil? ? [fulfillment] : [fulfillment].first(size)
+          end
+
+          def self.create(id: SecureRandom.uuid, order_id: SecureRandom.uuid,
+                          status: "INGESTED", delivery_date: Date.today.to_s,
+                          address: Fake::FulfillmentAddress.new(zip: "12345"),
+                          shipments: [Fake::Shipment.create],
+                          idempotency_key: SecureRandom.uuid)
+            new(id: id, fulfillment_id: id, order_id: order_id, status: status,
+                delivery_date: delivery_date, address: address,
+                shipments: shipments, idempotency_key: idempotency_key)
+          end
+
+          def create!
+            self[:fulfillment_id] = id
+            self[:status] = "INGESTED"
+            self
+          end
+
+          def cancel!
+            self[:status] = "CANCELLED"
+            self
+          end
+
+          def accepted?
+            ACCEPTED_STATUSES.include?(status.to_s.upcase)
+          end
+
+          def cancelled?
+            status.to_s.upcase == "CANCELLED"
+          end
+
+          def valid?
+            status.to_s.upcase != "ERROR"
           end
         end
 

@@ -8,6 +8,10 @@ module Bls
 
     class OrderNotCreatedError < ApiError; end
 
+    class FulfillmentNotCancelledError < ApiError; end
+
+    class FulfillmentNotCreatedError < ApiError; end
+
     class AuthenticationError < ApiError; end
   end
 end

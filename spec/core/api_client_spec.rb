@@ -151,6 +151,17 @@ RSpec.describe Bls::Core::ApiClient do
       expect(request.body).to eq(body.to_json)
     end
 
+    it "assigns the idempotency key header to the request" do
+      stub_api_response
+      client = Bls::Core::ApiClient.new
+      request = build_stubbed_post(url: "http://test.com/orders")
+
+      client.post(path: "http://test.com/orders", body: {},
+                  headers: { "X-Idempotency-Key" => "key-1" })
+
+      expect(request["X-Idempotency-Key"]).to eq("key-1")
+    end
+
     it "executes the request" do
       stub_api_response
       body = { test: "yes" }
@@ -226,6 +237,23 @@ RSpec.describe Bls::Core::ApiClient do
         client.get(path: "http://test.com/orders/1", authorization: auth)
 
         expect(request["Authorization"]).to eq(auth.header)
+      end
+    end
+
+    context "when params are provided" do
+      it "adds the params as part of the query string" do
+        stub_api_response
+        client = Bls::Core::ApiClient.new
+        allow(Net::HTTP::Get).to receive(:new).and_call_original
+
+        client.get(path: "http://test.com/api/fulfillments",
+                   params: { delivery_date_from: "2024-02-13",
+                             delivery_date_to: nil, order_id: "abc" })
+
+        expect(Net::HTTP::Get).to have_received(:new).with(
+          URI("http://test.com/api/fulfillments?" \
+              "delivery_date_from=2024-02-13&order_id=abc")
+        )
       end
     end
   end

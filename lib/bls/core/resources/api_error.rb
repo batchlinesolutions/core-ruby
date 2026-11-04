@@ -24,14 +24,15 @@ module Bls
         data = response.data
         status = data.fetch(:status, data[:type])
         title = data.fetch(:title, data[:message])
-        details = data[:details]
+        details = data[:details] || data
         new(status: status, title: title, details: details)
       end
 
       protected
 
       def description
-        details[:description]
+        return details[:description] if details[:description]
+        details.to_json
       end
     end
   end

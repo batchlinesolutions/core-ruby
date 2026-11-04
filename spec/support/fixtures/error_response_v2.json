@@ -1,0 +1,10 @@
+{
+  "type": "VALIDATION_ERROR",
+  "message": "Request Validation Error",
+  "validation_errors": [
+    {
+      "field": "address.zip",
+      "error": "is invalid"
+    }
+  ]
+}
