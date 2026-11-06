@@ -67,7 +67,7 @@ RSpec.describe Bls::Core::V2 do
 
   describe "reset authentication" do
     it "removes the present authentication" do
-      auth = Bls::Core::Authorization::Basic.new(token: "1234")
+      auth = Bls::Authorization::Basic.new(token: "1234")
       api = Bls::Core::V2.new(authentication: auth)
 
       result = api.reset_authentication
@@ -76,7 +76,7 @@ RSpec.describe Bls::Core::V2 do
     end
 
     it "is not authenticated" do
-      auth = Bls::Core::Authorization::Basic.new(token: "1234")
+      auth = Bls::Authorization::Basic.new(token: "1234")
       api = Bls::Core::V2.new(authentication: auth)
 
       result = api.reset_authentication
@@ -120,7 +120,7 @@ RSpec.describe Bls::Core::V2 do
   def build_stubbed_authenticator(api)
     authenticator = Bls::Core::V2::Authenticator.build(api)
     authentication = authenticator.authentication
-    client = Bls::Core::ApiClient.new(authentication: authentication)
+    client = Bls::ApiClient.new(authentication: authentication)
     allow(Bls::Core::V2::Authenticator).to receive(:build).
       and_return(authenticator)
     allow(authenticator).to receive(:save!).and_return(client)

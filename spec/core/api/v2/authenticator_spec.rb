@@ -3,7 +3,7 @@
 RSpec.describe Bls::Core::V2::Authenticator do
   describe "#save!" do
     it "returns a authorization scheme" do
-      basic = Bls::Core::Authorization::Basic.new(token: "test")
+      basic = Bls::Authorization::Basic.new(token: "test")
       auth = Bls::Core::V2::Authenticator.new(authentication: basic)
 
       result = auth.save!
@@ -15,8 +15,8 @@ RSpec.describe Bls::Core::V2::Authenticator do
   describe ".build" do
     it "sets the authentication" do
       api = Bls::Core::V2.new
-      basic = Bls::Core::Authorization::Basic.new(token: "test")
-      allow(Bls::Core::Authorization::Basic).to receive(:factory).
+      basic = Bls::Authorization::Basic.new(token: "test")
+      allow(Bls::Authorization::Basic).to receive(:factory).
         and_return(basic)
 
       result = Bls::Core::V2::Authenticator.build(api)

@@ -3,18 +3,22 @@
 module Bls
   module Core
     class Object < OpenStruct
-      extend Bls::Core::ApiOperations::Retrieve
+      extend Bls::ApiOperations::Retrieve
 
       def self.build(data)
         JSON.parse(data.to_json, object_class: self)
       end
 
+      def self.build_from_array(array)
+        array.map { |object| build(object) }
+      end
+
       def resources_path
-        "#{api.base_url}/#{object_name.downcase}"
+        "#{api.base_url}/api/#{object_name.downcase}"
       end
 
       def resource_path
-        "#{api.base_url}/#{object_name.downcase}/#{id}"
+        "#{api.base_url}/api/#{object_name.downcase}/#{id}"
       end
 
       def client
@@ -22,7 +26,7 @@ module Bls
       end
 
       def api
-        @api ||= Bls::Core::V1.build
+        @api ||= Bls::Core::V2.build
       end
     end
   end

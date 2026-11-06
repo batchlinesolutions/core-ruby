@@ -2,6 +2,6 @@
 
 module Bls
   module Core
-    class NutritionFact < Bls::Core::ObjectV2; end
+    class NutritionFact < Bls::Core::Object; end
   end
 end

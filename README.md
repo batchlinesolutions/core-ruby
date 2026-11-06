@@ -18,12 +18,23 @@ executing:
 ```
 require "bls/core"
 
+# CORE API (Bls::Core::* resources: Product, Allergen, Ingredient, ...)
 Bls::Core.configure do |config|
+  config.username = "XXXXXX"
+  config.password = "YYYYYY"
+  config.environment = "staging"
+end
+
+# Partner API (Bls::Partner::* resources: Order, Menu, InventoryLevel, ...)
+Bls::Partner.configure do |config|
   config.client_id = "XXXXXX"
   config.client_secret = "YYYYYY"
-  config.environment = "preview"
+  config.environment = "staging"
 end
 ```
+
+`require "bls/core"` loads both namespaces. Use `require "bls/partner"` to load
+only the Partner API.
 
 ### Usage
 
@@ -47,6 +58,8 @@ For `rspec`, add the following line to your `spec/rails_helper.rb` or
 ```
 require "bls/core/rspec"
 ```
+
+This stubs both `Bls::Core` and `Bls::Partner` with in-memory fakes.
 
 ## Contributing
 
