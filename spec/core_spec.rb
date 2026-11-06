@@ -6,20 +6,20 @@ RSpec.describe Bls::Core do
   end
 
   describe "#configure" do
-    it "sets the client ID" do
+    it "sets the username" do
       Bls::Core.configure do |config|
-        config.client_id = "abc"
+        config.username = "abc"
       end
 
-      expect(Bls::Core.client_id).to eq("abc")
+      expect(Bls::Core.username).to eq("abc")
     end
 
-    it "sets the client secret" do
+    it "sets the password" do
       Bls::Core.configure do |config|
-        config.client_secret = "abc"
+        config.password = "abc"
       end
 
-      expect(Bls::Core.client_secret).to eq("abc")
+      expect(Bls::Core.password).to eq("abc")
     end
 
     it "sets the environment" do

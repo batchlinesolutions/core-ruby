@@ -51,7 +51,7 @@ module Bls
 
       def build_api_client!
         authenticate!
-        Bls::Core::ApiClient.build(self)
+        Bls::ApiClient.build(self)
       end
 
       def tld

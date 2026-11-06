@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bls-core (0.0.0)
+    bls-core (0.2.0)
 
 GEM
   remote: https://rubygems.org/
