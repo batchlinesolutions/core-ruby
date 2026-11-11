@@ -16,14 +16,27 @@ executing:
 ### Setup Work
 
 ```
+# CORE API (Bls::Core::* resources: Product, Allergen, Ingredient, ...)
 require "bls/core"
 
 Bls::Core.configure do |config|
+  config.username = "XXXXXX"
+  config.password = "YYYYYY"
+  config.environment = "staging"
+end
+
+# Partner API (Bls::Partner::* resources: Order, Menu, InventoryLevel, ...)
+require "bls/partner"
+
+Bls::Partner.configure do |config|
   config.client_id = "XXXXXX"
   config.client_secret = "YYYYYY"
-  config.environment = "preview"
+  config.environment = "staging"
 end
 ```
+
+`Bls::Core` and `Bls::Partner` are independent. Require only the namespace
+your application uses, or both.
 
 ### Usage
 
@@ -45,7 +58,8 @@ For `rspec`, add the following line to your `spec/rails_helper.rb` or
 `spec/spec_helper` if `rails_helper` does not exist:
 
 ```
-require "bls/core/rspec"
+require "bls/core/rspec"     # stubs Bls::Core with in-memory fakes
+require "bls/partner/rspec"  # stubs Bls::Partner with in-memory fakes
 ```
 
 ## Contributing
