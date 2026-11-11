@@ -2,6 +2,6 @@
 
 module Bls
   module Core
-    class DietaryTag < Bls::Core::ObjectV2; end
+    class DietaryTag < Bls::Core::Object; end
   end
 end

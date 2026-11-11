@@ -24,15 +24,15 @@ module ApiHelper
     stub_api_response response: response
   end
 
-  def stub_api_v1_authentication(authenticated: true)
-    api = Bls::Core::V1.build
-    allow(Bls::Core::V1).to receive(:new).and_return(api)
+  def stub_partner_api_authentication(authenticated: true)
+    api = Bls::Partner::Api.build
+    allow(Bls::Partner::Api).to receive(:new).and_return(api)
     allow(api).to receive(:authenticated?).and_return(authenticated)
   end
 
-  def stub_api_v2_authentication(authenticated: true)
-    api = Bls::Core::V2.build
-    allow(Bls::Core::V2).to receive(:new).and_return(api)
+  def stub_core_api_authentication(authenticated: true)
+    api = Bls::Core::Api.build
+    allow(Bls::Core::Api).to receive(:new).and_return(api)
     allow(api).to receive(:authenticated?).and_return(authenticated)
   end
 
