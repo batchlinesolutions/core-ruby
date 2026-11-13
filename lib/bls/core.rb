@@ -10,7 +10,6 @@ require "bls/core/resources/ingredient"
 require "bls/core/resources/nutrition_fact"
 require "bls/core/resources/product"
 require "bls/core/resources/product_factory"
-require "bls/core/version"
 
 module Bls
   module Core

@@ -24,6 +24,8 @@
 - Test fakes split into `Bls::Core::Testing::Fake` and
   `Bls::Partner::Testing::Fake`. `bls/core/rspec` stubs `Bls::Core` and the
   new `bls/partner/rspec` stubs `Bls::Partner`.
+- `Bls::Core::VERSION` was replaced by `Bls::VERSION`, defined in
+  `lib/bls/version.rb`.
 
 
 ## [0.1.0] - 2023-03-12

@@ -6,6 +6,7 @@ require "json"
 require "net/http"
 require "ostruct"
 
+require "bls/version"
 require "bls/api_error"
 require "bls/errors"
 require "bls/authorization/base"

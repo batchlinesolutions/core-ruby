@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Bls::Core do
-  it "has a version number" do
-    expect(Bls::Core::VERSION).not_to be_nil
-  end
-
   describe "#configure" do
     it "sets the username" do
       Bls::Core.configure do |config|
