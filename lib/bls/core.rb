@@ -14,8 +14,6 @@ require "bls/core/version"
 
 module Bls
   module Core
-    class Error < StandardError; end
-
     class << self
       attr_accessor :environment, :username, :password
 

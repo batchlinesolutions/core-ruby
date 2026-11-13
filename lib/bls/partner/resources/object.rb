@@ -2,25 +2,7 @@
 
 module Bls
   module Partner
-    class Object < OpenStruct
-      extend Bls::ApiOperations::Retrieve
-
-      def self.build(data)
-        JSON.parse(data.to_json, object_class: self)
-      end
-
-      def resources_path
-        "#{api.base_url}/#{object_name.downcase}"
-      end
-
-      def resource_path
-        "#{api.base_url}/#{object_name.downcase}/#{id}"
-      end
-
-      def client
-        api.client
-      end
-
+    class Object < Bls::Resource
       def api
         @api ||= Bls::Partner::Api.build
       end

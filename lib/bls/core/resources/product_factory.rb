@@ -3,7 +3,7 @@
 module Bls
   module Core
     class ProductFactory
-      attr_accessor :response
+      attr_reader :response
 
       def initialize(response)
         @response = response
@@ -33,12 +33,12 @@ module Bls
       end
 
       def nutrition_facts
-        as_packaged = NutritionFact.
-                      build_from_array(response[:nutrition_facts][:as_packaged])
-        as_cooked = NutritionFact.
-                    build_from_array(response[:nutrition_facts].
-                                     fetch(:as_cooked, []))
-        { as_packaged: as_packaged, as_cooked: as_cooked }
+        facts = response[:nutrition_facts]
+        as_cooked = facts.fetch(:as_cooked, [])
+        {
+          as_packaged: NutritionFact.build_from_array(facts[:as_packaged]),
+          as_cooked: NutritionFact.build_from_array(as_cooked),
+        }
       end
     end
   end

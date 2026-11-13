@@ -43,9 +43,7 @@ module Bls
           end
 
           def self.retrieve(id)
-            items = [Fake::MenuItem.create]
-            OpenStruct.new(id: id, deadline: Time.zone.now,
-                           shipping_fee: 9.99, items: items)
+            new(id: id)
           end
         end
 

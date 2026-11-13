@@ -3,10 +3,6 @@
 module Bls
   module Partner
     class Menu < Partner::Object
-      def initialize(args = {})
-        super
-      end
-
       def object_name
         "menu"
       end

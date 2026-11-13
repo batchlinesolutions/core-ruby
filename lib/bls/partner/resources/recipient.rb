@@ -2,10 +2,6 @@
 
 module Bls
   module Partner
-    class Recipient < Partner::Object
-      def initialize(args = {})
-        super
-      end
-    end
+    class Recipient < Partner::Object; end
   end
 end

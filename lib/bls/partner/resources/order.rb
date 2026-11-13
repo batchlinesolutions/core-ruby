@@ -32,7 +32,7 @@ module Bls
       def create!
         response = client.post(path: resources_path, body: request_body)
         if response.success?
-          Order::build_from_response(response.data)
+          self.class.build_from_response(response.data)
         else
           handle_order_not_created(response)
         end

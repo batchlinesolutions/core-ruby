@@ -20,15 +20,8 @@ module Bls
         }
       end
 
-      def self.retrieve_all
-        resource = new
-        api_client = resource.client
-        response = api_client.get(path: resource.resources_path)
-        if response.success?
-          response.data[:inventory].map { |inventory| build(inventory) }
-        else
-          raise ResourceRetrievalError.build(response)
-        end
+      def self.build_all_from_response(data)
+        build_from_array(data[:inventory])
       end
     end
   end

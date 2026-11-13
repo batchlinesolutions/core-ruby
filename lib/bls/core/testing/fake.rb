@@ -40,34 +40,6 @@ module Bls
                            dietary_tags: [Fake::DietaryTag.create])
           end
         end
-
-        def self.client
-          Fake::Client.new
-        end
-
-        class ApiClient
-          def self.new(*)
-            Fake::Client.new
-          end
-        end
-
-        class ApiClientSerializer
-          def self.serialize(*)
-            OpenStruct.new(id: nil, secret: nil).to_h
-          end
-        end
-
-        class Client
-          def initialize(*)
-            self
-          end
-
-          def authenticated?
-            false
-          end
-
-          def authenticate!; end
-        end
       end
     end
   end

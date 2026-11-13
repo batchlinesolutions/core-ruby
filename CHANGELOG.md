@@ -1,5 +1,19 @@
 ## [Unreleased]
 
+### Removed
+
+- Unused `Bls::Core::Error`.
+- `Bls::Core::Testing::Fake` no longer defines `.client`, `ApiClient`,
+  `ApiClientSerializer` or `Client`; none of these exist on the real `Bls::Core`.
+
+### Changed
+
+- `Bls::Core::Api` and `Bls::Partner::Api` now share a `Bls::Api` base class.
+- `Bls::Core::Object` and `Bls::Partner::Object` now share a `Bls::Resource`
+  base class, so `build_from_array` is available on Partner resources too.
+- `Bls::ApiOperations::Retrieve` exposes a `build_all_from_response` hook,
+  used by `InventoryLevel` instead of overriding `retrieve_all`.
+
 ## [0.2.0] - 2026-11-06
 
 ### Breaking changes

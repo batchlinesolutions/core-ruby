@@ -2,10 +2,6 @@
 
 module Bls
   module Partner
-    class MenuItem < Partner::Object
-      def initialize(args = {})
-        super
-      end
-    end
+    class MenuItem < Partner::Object; end
   end
 end

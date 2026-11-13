@@ -1,0 +1,27 @@
+# frozen_string_literal: true
+
+module Bls
+  class Resource < OpenStruct
+    extend Bls::ApiOperations::Retrieve
+
+    def self.build(data)
+      JSON.parse(data.to_json, object_class: self)
+    end
+
+    def self.build_from_array(array)
+      array.map { |object| build(object) }
+    end
+
+    def resources_path
+      "#{api.base_url}/#{object_name.downcase}"
+    end
+
+    def resource_path
+      "#{api.base_url}/#{object_name.downcase}/#{id}"
+    end
+
+    def client
+      api.client
+    end
+  end
+end
