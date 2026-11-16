@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-ruby "3.1.2"
+ruby "3.1.4"
 
 # Specify your gem's dependencies in intelligent-foods-ruby.gemspec
 gemspec
