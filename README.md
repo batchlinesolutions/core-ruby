@@ -51,9 +51,9 @@ require "bls/core/rspec"
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at
-https://github.com/[USERNAME]/core-ruby. This project is intended
+https://github.com/batchlinesolutions/core-ruby. This project is intended
 to be a safe, welcoming space for collaboration, and contributors are expected
-to adhere to the [code of conduct](https://github.com/[USERNAME]/core-ruby/blob/main/CODE_OF_CONDUCT.md).
+to adhere to the [code of conduct](https://github.com/batchlinesolutions/core-ruby/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -62,4 +62,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Code of Conduct
 
 Everyone interacting in the BatchlineSolutions project's codebases, issue
-trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/core-ruby/blob/main/CODE_OF_CONDUCT.md).
+trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/batchlinesolutions/core-ruby/blob/main/CODE_OF_CONDUCT.md).
