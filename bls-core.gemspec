@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require_relative "lib/bls/core/version"
+require_relative "lib/bls/version"
 
 Gem::Specification.new do |spec|
   spec.name = "bls-core"
-  spec.version = Bls::Core::VERSION
+  spec.version = Bls::VERSION
   spec.authors = ["Chris Woodford", "Rohan Likhite"]
   spec.email = ["chris.woodford@batchline.solutions",
                 "rohan.likhite@batchline.solutions"]
 
-  spec.summary = "Ruby SDK for the Batchline Solutions Core API"
+  spec.summary = "Ruby SDK for the Batchline Solutions Core and Partner APIs"
   spec.homepage = "https://batchline.solutions.com"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.1"
@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
 
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"
+  spec.add_dependency "activesupport", ">= 5.0"
 
   spec.add_development_dependency "pry", "~> 0.14"
 
