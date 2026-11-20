@@ -94,20 +94,20 @@ RSpec.describe Bls::Partner::Api do
       expect(result.environment).to eq("preview")
     end
 
-    it "sets the username" do
-      config = build_config(client_id: "secretUsername")
+    it "sets the client ID" do
+      config = build_config(client_id: "id123")
 
       result = Bls::Partner::Api.build(config: config)
 
-      expect(result.username).to eq("secretUsername")
+      expect(result.client_id).to eq("id123")
     end
 
-    it "sets the password" do
-      config = build_config(client_secret: "secretPassword")
+    it "sets the client secret" do
+      config = build_config(client_secret: "secret123")
 
       result = Bls::Partner::Api.build(config: config)
 
-      expect(result.password).to eq("secretPassword")
+      expect(result.client_secret).to eq("secret123")
     end
   end
 

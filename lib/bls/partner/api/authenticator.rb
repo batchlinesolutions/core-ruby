@@ -23,8 +23,8 @@ module Bls
 
       def self.build(api)
         new(base_url: api.base_url,
-            client_id: api.username,
-            client_secret: api.password)
+            client_id: api.client_id,
+            client_secret: api.client_secret)
       end
 
       protected

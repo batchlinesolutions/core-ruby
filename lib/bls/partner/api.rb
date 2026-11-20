@@ -4,17 +4,17 @@ module Bls
   module Partner
     class Api
       attr_accessor :authentication
-      attr_reader :environment, :username, :password
+      attr_reader :environment, :client_id, :client_secret
 
       PRODUCTION = "production"
       STAGING = "staging"
 
-      def initialize(username: nil, password: nil, authentication: nil,
+      def initialize(client_id: nil, client_secret: nil, authentication: nil,
                      environment: STAGING)
         @authentication = authentication
         @environment = environment
-        @username = username
-        @password = password
+        @client_id = client_id
+        @client_secret = client_secret
       end
 
       def base_url
@@ -43,8 +43,8 @@ module Bls
 
       def self.build(config: Bls::Partner)
         new(environment: config.environment,
-            username: config.client_id,
-            password: config.client_secret)
+            client_id: config.client_id,
+            client_secret: config.client_secret)
       end
 
       protected

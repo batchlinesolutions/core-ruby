@@ -31,7 +31,7 @@ RSpec.describe Bls::Partner::Api::Authenticator do
 
   describe ".build" do
     it "sets the client_id" do
-      api = Bls::Partner::Api.new(username: "id123")
+      api = Bls::Partner::Api.new(client_id: "id123")
 
       result = Bls::Partner::Api::Authenticator.build(api)
 
@@ -39,7 +39,7 @@ RSpec.describe Bls::Partner::Api::Authenticator do
     end
 
     it "sets the client_secret" do
-      api = Bls::Partner::Api.new(password: "secret123")
+      api = Bls::Partner::Api.new(client_secret: "secret123")
 
       result = Bls::Partner::Api::Authenticator.build(api)
 
