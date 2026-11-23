@@ -2,6 +2,6 @@
 
 module Bls
   module Core
-    class Ingredient < Bls::Core::ObjectV2; end
+    class Ingredient < Bls::Core::Object; end
   end
 end

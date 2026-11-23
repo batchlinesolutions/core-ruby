@@ -2,7 +2,7 @@
 
 module Bls
   module Core
-    class Product < Bls::Core::ObjectV2
+    class Product < Bls::Core::Object
       def object_name
         "products"
       end

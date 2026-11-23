@@ -6,7 +6,7 @@ RSpec.describe Bls::Core::Product do
       product_id = "MP0527"
       body = build_product_response(product_id: product_id)
       response = build_response(body: body)
-      stub_api_v2_authentication
+      stub_core_api_authentication
       stub_api_response response: response
 
       result = Bls::Core::Product.retrieve(product_id)
