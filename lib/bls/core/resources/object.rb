@@ -3,10 +3,14 @@
 module Bls
   module Core
     class Object < OpenStruct
-      extend Bls::Core::ApiOperations::Retrieve
+      extend Bls::ApiOperations::Retrieve
 
       def self.build(data)
         JSON.parse(data.to_json, object_class: self)
+      end
+
+      def self.build_from_array(array)
+        array.map { |object| build(object) }
       end
 
       def resources_path
@@ -22,7 +26,7 @@ module Bls
       end
 
       def api
-        @api ||= Bls::Core::V1.build
+        @api ||= Bls::Core::Api.build
       end
     end
   end

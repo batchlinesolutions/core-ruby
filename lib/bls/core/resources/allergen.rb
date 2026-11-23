@@ -2,6 +2,6 @@
 
 module Bls
   module Core
-    class Allergen < Bls::Core::ObjectV2; end
+    class Allergen < Bls::Core::Object; end
   end
 end
