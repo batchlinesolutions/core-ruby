@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-23
+
 ### Breaking changes
 
 - Resources backed by the v1 Partner API moved from `Bls::Core` to the new
