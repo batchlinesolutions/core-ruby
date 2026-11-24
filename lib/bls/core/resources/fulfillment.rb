@@ -78,7 +78,7 @@ module Bls
       end
 
       def request_body
-        @request_body ||= {
+        {
           order_id: order_id.to_s,
           customer_id: customer_id,
           delivery_date: delivery_date,

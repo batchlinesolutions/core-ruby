@@ -165,6 +165,18 @@ RSpec.describe Bls::Core::Fulfillment do
       expect(result[:validation_options]).
         to eq(skip_temperature_check: true, skip_address_validation: false)
     end
+
+    context "when an attribute changes after the body was built" do
+      it "assigns the updated value" do
+        fulfillment = build(:fulfillment, zip: "13610")
+        fulfillment.request_body
+        fulfillment.zip = "90210"
+
+        result = fulfillment.request_body
+
+        expect(result[:zip]).to eq("90210")
+      end
+    end
   end
 
   describe ".retrieve" do
