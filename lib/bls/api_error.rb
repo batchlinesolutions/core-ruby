@@ -23,15 +23,22 @@ module Bls
       data = response.data
       status = data.fetch(:status, data[:type])
       title = data.fetch(:title, data[:message])
-      details = data[:details] || data
+      details = data[:details] || data[:validation_errors]
       new(status: status, title: title, details: details)
     end
 
     protected
 
     def description
-      return details[:description] if details[:description]
-      details.to_json
+      if details.is_a?(Array)
+        validation_errors_description
+      else
+        details[:description]
+      end
+    end
+
+    def validation_errors_description
+      details.map { |error| "#{error[:field]} #{error[:error]}" }.join(", ")
     end
   end
 end

@@ -3,10 +3,6 @@
 module Bls
   module Core
     class Shipment < Core::Object
-      def initialize(args = {})
-        super
-      end
-
       def self.build_from_response(data)
         shipment = build(data)
         shipment[:id] = data[:shipment_id]

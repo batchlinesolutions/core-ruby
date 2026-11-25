@@ -12,14 +12,12 @@ module Bls
       ACCEPTED_STATUSES = [INGESTED, PROCESSING, PROCESSED, COMPLETED].freeze
 
       attr_reader :skip_temperature_check, :skip_address_validation
-      attr_writer :idempotency_key
 
       def initialize(skip_temperature_check: false,
-                     skip_address_validation: false, idempotency_key: nil, **)
-        super
+                     skip_address_validation: false, **attributes)
+        super(attributes)
         @skip_temperature_check = skip_temperature_check
         @skip_address_validation = skip_address_validation
-        @idempotency_key = idempotency_key
       end
 
       def self.build_from_response(data)
@@ -31,6 +29,12 @@ module Bls
           Shipment.build_from_response(shipment)
         end
         fulfillment
+      end
+
+      def self.build_page_from_response(data)
+        content = Array(data[:content]).map { |item| build_from_response(item) }
+        Page.new(content: content, total_pages: data[:total_pages],
+                 total_elements: data[:total_elements])
       end
 
       def self.retrieve_all(page:, delivery_date_from: nil,
@@ -46,8 +50,7 @@ module Bls
         response = resource.client.get(path: resource.resources_path,
                                        params: params)
         if response.success?
-          content = Array(response.data[:content])
-          content.map { |data| build_from_response(data) }
+          build_page_from_response(response.data)
         else
           raise ResourceRetrievalError.build(response)
         end
@@ -57,9 +60,10 @@ module Bls
         "fulfillments"
       end
 
-      def create!
+      def create!(idempotency_key:)
+        headers = { "X-Idempotency-Key": idempotency_key }
         response = client.post(path: resources_path, body: request_body,
-                               headers: request_headers)
+                               headers: headers)
         if response.success?
           handle_fulfillment_created(response)
         else
@@ -93,14 +97,6 @@ module Bls
           validation_options: validation_options,
           items: items_serialized,
         }.compact
-      end
-
-      def request_headers
-        { "X-Idempotency-Key": idempotency_key }
-      end
-
-      def idempotency_key
-        @idempotency_key ||= SecureRandom.uuid
       end
 
       def accepted?

@@ -11,24 +11,24 @@ RSpec.describe Bls::Core::Fulfillment do
       client = build_stubbed_core_api_client
       allow(client).to receive(:post).and_call_original
 
-      fulfillment.create!
+      fulfillment.create!(idempotency_key: "9b2f0c52")
 
       expect(client).to have_received(:post).with(
         path: "https://core.batchlinesolutions.dev/api/fulfillments",
         body: fulfillment.request_body,
-        headers: fulfillment.request_headers
+        headers: { "X-Idempotency-Key": "9b2f0c52" }
       )
     end
 
     it "sends the idempotency key header" do
-      fulfillment = build(:fulfillment, idempotency_key: "9b2f0c52")
+      fulfillment = build(:fulfillment)
       body = build_fulfillment_response
       stub_core_api_authentication
       stub_api_response response: build_response(body: body,
                                                  http_status_code: 202)
       request = build_stubbed_post
 
-      fulfillment.create!
+      fulfillment.create!(idempotency_key: "9b2f0c52")
 
       expect(request["X-Idempotency-Key"]).to eq("9b2f0c52")
     end
@@ -40,7 +40,7 @@ RSpec.describe Bls::Core::Fulfillment do
       stub_api_response response: build_response(body: body,
                                                  http_status_code: 202)
 
-      result = fulfillment.create!
+      result = fulfillment.create!(idempotency_key: "9b2f0c52")
 
       expect(result.id).to eq("f-123")
     end
@@ -52,7 +52,7 @@ RSpec.describe Bls::Core::Fulfillment do
       stub_api_response response: build_response(body: body,
                                                  http_status_code: 202)
 
-      result = fulfillment.create!
+      result = fulfillment.create!(idempotency_key: "9b2f0c52")
 
       expect(result).to be_accepted
     end
@@ -66,7 +66,7 @@ RSpec.describe Bls::Core::Fulfillment do
         stub_api_response response: response
 
         expect {
-          fulfillment.create!
+          fulfillment.create!(idempotency_key: "9b2f0c52")
         }.to raise_error(Bls::Core::FulfillmentNotCreatedError)
       end
 
@@ -78,7 +78,7 @@ RSpec.describe Bls::Core::Fulfillment do
         stub_api_response response: response
 
         begin
-          fulfillment.create!
+          fulfillment.create!(idempotency_key: "9b2f0c52")
         rescue Bls::Core::FulfillmentNotCreatedError
           nil
         end
@@ -86,18 +86,36 @@ RSpec.describe Bls::Core::Fulfillment do
         expect(fulfillment).not_to be_valid
       end
 
-      it "includes the API error response in the error message" do
-        fulfillment = build(:fulfillment)
-        body = read_v2_error_response
-        response = build_response(body: body, http_status_code: 422)
-        stub_core_api_authentication
-        stub_api_response response: response
+      context "when the response lists validation errors" do
+        it "describes each validation error in the error message" do
+          fulfillment = build(:fulfillment)
+          body = read_v2_error_response
+          body[:validation_errors] = [
+            { field: "address.zip", error: "is invalid" },
+            { field: "items", error: "must not be empty" },
+          ]
+          response = build_response(body: body, http_status_code: 422)
+          stub_core_api_authentication
+          stub_api_response response: response
 
-        expect {
-          fulfillment.create!
-        }.to raise_error(Bls::Core::FulfillmentNotCreatedError,
-                         /#{Regexp.escape(body.to_json)}/)
+          expect {
+            fulfillment.create!(idempotency_key: "9b2f0c52")
+          }.to raise_error(Bls::Core::FulfillmentNotCreatedError,
+                           /address\.zip is invalid, items must not be empty/)
+        end
       end
+    end
+  end
+
+  describe "#to_h" do
+    it "excludes the validation options" do
+      fulfillment = Bls::Core::Fulfillment.new(skip_temperature_check: true,
+                                               skip_address_validation: true,
+                                               order_id: "1337")
+
+      result = fulfillment.to_h
+
+      expect(result).to eq(order_id: "1337")
     end
   end
 
@@ -205,6 +223,19 @@ RSpec.describe Bls::Core::Fulfillment do
           Bls::Core::Fulfillment.retrieve("missing")
         }.to raise_error(Bls::ResourceRetrievalError)
       end
+
+      context "when the error has neither details nor validation errors" do
+        it "reports only the status and title" do
+          body = { status: 404, title: "Not Found" }
+          stub_core_api_authentication
+          stub_api_response response: build_response(body: body,
+                                                     http_status_code: 404)
+
+          expect {
+            Bls::Core::Fulfillment.retrieve("missing")
+          }.to raise_error(Bls::ResourceRetrievalError, "404 - Not Found")
+        end
+      end
     end
   end
 
@@ -237,7 +268,29 @@ RSpec.describe Bls::Core::Fulfillment do
 
       result = Bls::Core::Fulfillment.retrieve_all(page: 0)
 
-      expect(result.map(&:id)).to eq(["f-123"])
+      expect(result.content.map(&:id)).to eq(["f-123"])
+    end
+
+    it "returns the total number of pages" do
+      body = build_fulfillments_response
+      body[:total_pages] = 3
+      stub_core_api_authentication
+      stub_api_response response: build_response(body: body)
+
+      result = Bls::Core::Fulfillment.retrieve_all(page: 0)
+
+      expect(result.total_pages).to eq(3)
+    end
+
+    it "returns the total number of fulfillments" do
+      body = build_fulfillments_response
+      body[:total_elements] = 41
+      stub_core_api_authentication
+      stub_api_response response: build_response(body: body)
+
+      result = Bls::Core::Fulfillment.retrieve_all(page: 0)
+
+      expect(result.total_elements).to eq(41)
     end
 
     context "the response is not successful" do

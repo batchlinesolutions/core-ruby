@@ -81,25 +81,23 @@ module Bls
           def self.retrieve_all(page:, delivery_date_from: nil,
                                 delivery_date_to: nil,
                                 order_id: SecureRandom.uuid, size: nil)
-            return [] unless page.zero?
-
-            delivery_date = Date.today.to_s
             fulfillment = create(order_id: order_id,
-                                 delivery_date: delivery_date)
-            size.nil? ? [fulfillment] : [fulfillment].first(size)
+                                 delivery_date: Date.today.to_s)
+            content = page.zero? ? [fulfillment].first(size || 1) : []
+            OpenStruct.new(content: content, total_pages: 1,
+                           total_elements: 1)
           end
 
           def self.create(id: SecureRandom.uuid, order_id: SecureRandom.uuid,
                           status: "INGESTED", delivery_date: Date.today.to_s,
                           address: Fake::FulfillmentAddress.new(zip: "12345"),
-                          shipments: [Fake::Shipment.create],
-                          idempotency_key: SecureRandom.uuid)
+                          shipments: [Fake::Shipment.create])
             new(id: id, fulfillment_id: id, order_id: order_id, status: status,
                 delivery_date: delivery_date, address: address,
-                shipments: shipments, idempotency_key: idempotency_key)
+                shipments: shipments)
           end
 
-          def create!
+          def create!(idempotency_key:)
             self[:fulfillment_id] = id
             self[:status] = "INGESTED"
             self

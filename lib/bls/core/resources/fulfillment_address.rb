@@ -3,10 +3,6 @@
 module Bls
   module Core
     class FulfillmentAddress < Core::Object
-      def initialize(args = {})
-        super
-      end
-
       def self.build_from_response(data)
         return if data.nil?
 
