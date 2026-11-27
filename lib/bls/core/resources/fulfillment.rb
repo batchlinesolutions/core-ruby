@@ -24,7 +24,7 @@ module Bls
         fulfillment = build(data)
         fulfillment[:id] = data[:fulfillment_id]
         fulfillment[:address] =
-          FulfillmentAddress.build_from_response(data[:address])
+          Address.build_from_response(data[:address])
         fulfillment[:shipments] = Array(data[:shipments]).map do |shipment|
           Shipment.build_from_response(shipment)
         end
@@ -152,7 +152,7 @@ module Bls
       def address_serialized
         return if address.nil?
 
-        FulfillmentAddressSerializer.new(address).to_json
+        AddressSerializer.new(address).to_json
       end
 
       def validation_options

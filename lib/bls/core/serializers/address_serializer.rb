@@ -2,7 +2,7 @@
 
 module Bls
   module Core
-    class FulfillmentAddressSerializer < SimpleDelegator
+    class AddressSerializer < SimpleDelegator
       def to_json
         address_object = {
           name: self[:name],

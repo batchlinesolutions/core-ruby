@@ -240,6 +240,20 @@ RSpec.describe Bls::ApiClient do
       end
     end
 
+    context "when no params are provided" do
+      it "requests the path without a query string" do
+        stub_api_response
+        client = Bls::ApiClient.new
+        allow(Net::HTTP::Get).to receive(:new).and_call_original
+
+        client.get(path: "http://test.com/api/fulfillments")
+
+        expect(Net::HTTP::Get).to have_received(:new).with(
+          URI("http://test.com/api/fulfillments")
+        )
+      end
+    end
+
     context "when params are provided" do
       it "adds the params as part of the query string" do
         stub_api_response

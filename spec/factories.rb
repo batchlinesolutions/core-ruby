@@ -15,7 +15,7 @@ FactoryBot.define do
   end
 
   factory :fulfillment, class: "Bls::Core::Fulfillment" do
-    address { build(:fulfillment_address) }
+    address { build(:address) }
     delivery_date { Date.today.to_s }
     items { [build(:fulfillment_item)] }
     sequence :order_id do |n|
@@ -73,7 +73,7 @@ FactoryBot.define do
     quantity { 1 }
   end
 
-  factory :fulfillment_address, class: "Bls::Core::FulfillmentAddress" do
+  factory :address, class: "Bls::Core::Address" do
     name { "First Name" }
     street1 { "123 Main Street" }
     street2 { "Apt 2B" }

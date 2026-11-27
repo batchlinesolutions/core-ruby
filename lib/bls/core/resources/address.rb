@@ -2,7 +2,7 @@
 
 module Bls
   module Core
-    class FulfillmentAddress < Core::Object
+    class Address < Core::Object
       def self.build_from_response(data)
         return if data.nil?
 

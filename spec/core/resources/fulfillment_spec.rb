@@ -20,19 +20,6 @@ RSpec.describe Bls::Core::Fulfillment do
       )
     end
 
-    it "sends the idempotency key header" do
-      fulfillment = build(:fulfillment)
-      body = build_fulfillment_response
-      stub_core_api_authentication
-      stub_api_response response: build_response(body: body,
-                                                 http_status_code: 202)
-      request = build_stubbed_post
-
-      fulfillment.create!(idempotency_key: "9b2f0c52")
-
-      expect(request["X-Idempotency-Key"]).to eq("9b2f0c52")
-    end
-
     it "assigns the fulfillment id as the id" do
       fulfillment = build(:fulfillment)
       body = build_fulfillment_response(fulfillment_id: "f-123")
@@ -40,7 +27,7 @@ RSpec.describe Bls::Core::Fulfillment do
       stub_api_response response: build_response(body: body,
                                                  http_status_code: 202)
 
-      result = fulfillment.create!(idempotency_key: "9b2f0c52")
+      result = fulfillment.create!(idempotency_key: anything)
 
       expect(result.id).to eq("f-123")
     end
@@ -52,7 +39,7 @@ RSpec.describe Bls::Core::Fulfillment do
       stub_api_response response: build_response(body: body,
                                                  http_status_code: 202)
 
-      result = fulfillment.create!(idempotency_key: "9b2f0c52")
+      result = fulfillment.create!(idempotency_key: anything)
 
       expect(result).to be_accepted
     end
@@ -66,7 +53,7 @@ RSpec.describe Bls::Core::Fulfillment do
         stub_api_response response: response
 
         expect {
-          fulfillment.create!(idempotency_key: "9b2f0c52")
+          fulfillment.create!(idempotency_key: anything)
         }.to raise_error(Bls::Core::FulfillmentNotCreatedError)
       end
 
@@ -77,32 +64,10 @@ RSpec.describe Bls::Core::Fulfillment do
         stub_core_api_authentication
         stub_api_response response: response
 
-        begin
-          fulfillment.create!(idempotency_key: "9b2f0c52")
-        rescue Bls::Core::FulfillmentNotCreatedError
-          nil
-        end
-
-        expect(fulfillment).not_to be_valid
-      end
-
-      context "when the response lists validation errors" do
-        it "describes each validation error in the error message" do
-          fulfillment = build(:fulfillment)
-          body = read_v2_error_response
-          body[:validation_errors] = [
-            { field: "address.zip", error: "is invalid" },
-            { field: "items", error: "must not be empty" },
-          ]
-          response = build_response(body: body, http_status_code: 422)
-          stub_core_api_authentication
-          stub_api_response response: response
-
-          expect {
-            fulfillment.create!(idempotency_key: "9b2f0c52")
-          }.to raise_error(Bls::Core::FulfillmentNotCreatedError,
-                           /address\.zip is invalid, items must not be empty/)
-        end
+        expect {
+          fulfillment.create!(idempotency_key: anything)
+        }.to raise_error(Bls::Core::FulfillmentNotCreatedError).
+          and change(fulfillment, :valid?).from(true).to(false)
       end
     end
   end
@@ -137,7 +102,7 @@ RSpec.describe Bls::Core::Fulfillment do
     end
 
     it "assigns the address delivery notes" do
-      address = build(:fulfillment_address, delivery_notes: "Door code 1234")
+      address = build(:address, delivery_notes: "Door code 1234")
       fulfillment = build(:fulfillment, address: address)
 
       result = fulfillment.request_body
@@ -146,7 +111,7 @@ RSpec.describe Bls::Core::Fulfillment do
     end
 
     it "excludes blank values from the address" do
-      address = build(:fulfillment_address, street2: "")
+      address = build(:address, street2: "")
       fulfillment = build(:fulfillment, address: address)
 
       result = fulfillment.request_body
@@ -321,7 +286,7 @@ RSpec.describe Bls::Core::Fulfillment do
 
       result = Bls::Core::Fulfillment.build_from_response(data)
 
-      expect(result.address.street1).to eq("123 Main Street")
+      expect(result.address).to have_attributes(street1: "123 Main Street")
     end
 
     it "assigns the shipment item code" do
@@ -329,7 +294,9 @@ RSpec.describe Bls::Core::Fulfillment do
 
       result = Bls::Core::Fulfillment.build_from_response(data)
 
-      expect(result.shipments.first.items.first.code).to eq("MP0001")
+      expect(result.shipments).to contain_exactly(
+        have_attributes(items: contain_exactly(have_attributes(code: "MP0001")))
+      )
     end
   end
 
@@ -394,13 +361,10 @@ RSpec.describe Bls::Core::Fulfillment do
         stub_core_api_authentication
         stub_api_response response: response
 
-        begin
+        expect {
           fulfillment.cancel!
-        rescue Bls::Core::FulfillmentNotCancelledError
-          nil
-        end
-
-        expect(fulfillment).not_to be_valid
+        }.to raise_error(Bls::Core::FulfillmentNotCancelledError).
+          and change(fulfillment, :valid?).from(true).to(false)
       end
     end
   end

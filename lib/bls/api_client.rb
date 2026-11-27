@@ -23,9 +23,7 @@ module Bls
     end
 
     def get(path:, params: {}, **)
-      uri = URI(path)
-      query = params.compact
-      uri.query = URI.encode_www_form(query) if query.any?
+      uri = build_uri(path: path, params: params.compact)
       request = Net::HTTP::Get.new(uri)
       execute_request(request: request, uri: request.uri)
     end
@@ -50,6 +48,14 @@ module Bls
       request["content-type"] = "application/json"
       headers.each { |name, value| request[name] = value }
       request
+    end
+
+    def build_uri(path:, params:)
+      uri = URI(path)
+      if params.any?
+        uri.query = URI.encode_www_form(params)
+      end
+      uri
     end
 
     def handle_response(response:)
