@@ -9,9 +9,10 @@ module Bls
       @authentication = authentication || Authorization::Blank.new
     end
 
-    def post(path:, body:)
+    def post(path:, body:, headers: {})
       uri = URI(path)
-      request = build_request_with_body(uri: uri, body: body)
+      request = build_request_with_body(uri: uri, body: body,
+                                        headers: headers)
       execute_request(request: request, uri: request.uri)
     end
 
@@ -21,8 +22,8 @@ module Bls
       execute_request(request: request, uri: request.uri)
     end
 
-    def get(path:, **)
-      uri = URI(path)
+    def get(path:, params: {}, **)
+      uri = build_uri(path: path, params: params.compact)
       request = Net::HTTP::Get.new(uri)
       execute_request(request: request, uri: request.uri)
     end
@@ -41,11 +42,20 @@ module Bls
 
     protected
 
-    def build_request_with_body(uri:, body:)
+    def build_request_with_body(uri:, body:, headers: {})
       request = Net::HTTP::Post.new(uri)
       request.body = body.to_json
       request["content-type"] = "application/json"
+      headers.each { |name, value| request[name] = value }
       request
+    end
+
+    def build_uri(path:, params:)
+      uri = URI(path)
+      if params.any?
+        uri.query = URI.encode_www_form(params)
+      end
+      uri
     end
 
     def handle_response(response:)

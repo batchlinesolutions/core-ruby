@@ -29,10 +29,28 @@
 - `Bls::Core::VERSION` was replaced by `Bls::VERSION`, defined in
   `lib/bls/version.rb`.
 
+### Added
+
+- `Bls::Core::Fulfillment`, a CORE API (`Bls::Core::Object`) resource for
+  creating, retrieving, listing and cancelling fulfillments. `create!` requires
+  an `idempotency_key:` and sends it as the `X-Idempotency-Key` header.
+  `retrieve_all` requires `page:` and returns a `Bls::Core::Page`. Its
+  attributes match the V2 create payload, including `zip`; validation options
+  are passed as `skip_temperature_check:` and `skip_address_validation:`.
+- `Bls::Core::Page` to hold one page of a listing: its `content`,
+  `total_pages` and `total_elements`.
+- `Bls::Core::Shipment` to hold shipments returned with a fulfillment.
+- `Bls::Core::FulfillmentNotCreatedError` and
+  `Bls::Core::FulfillmentNotCancelledError`.
+- `Bls::ApiClient` can send query params on GET and headers on POST.
+
 ### Changed
 
 - `activesupport` is now a declared runtime dependency, and `require "bls"`
   loads the `blank?`/`present?` core extensions the gem relies on.
+- API error messages describe the response's `validation_errors` (for
+  example `address.zip is invalid`) when it has no `details`. The list is
+  also available as `details`.
 
 ## [0.1.0] - 2023-03-12
 
